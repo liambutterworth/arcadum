@@ -1,21 +1,20 @@
 <?php
 
-
 namespace App\Models;
 
-use App\Models\Deity;
+use App\Models\Character;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Pantheon extends Model
+class Alignment extends Model
 {
     use HasFactory;
 
-    protected $table = 'pantheons';
+    protected $table = 'alignments';
 
-    public function deities()
+    public function characters(): HasMany
     {
-        return $this->hasMany(Deity::class);
+        return $this->hasMany(Character::class);
     }
 }

@@ -15,6 +15,8 @@ class CreateCharactersTable extends Migration
     {
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('alignment_id')->unsigned();
+            $table->foreign('alignment_id')->references('id')->on('alignments');
             $table->bigInteger('deity_id')->unsigned()->nullable();
             $table->foreign('deity_id')->references('id')->on('deities');
             $table->bigInteger('race_id')->unsigned();
@@ -23,11 +25,10 @@ class CreateCharactersTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('alignment');
             $table->string('eye_color');
             $table->string('hair_color');
             $table->string('skin_color');
-            $table->string('sex');
+            $table->string('gender');
             $table->integer('age');
             $table->integer('height');
             $table->integer('weight');

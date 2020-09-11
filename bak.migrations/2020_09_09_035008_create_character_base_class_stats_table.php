@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCharacterPrestigeClassTable extends Migration
+class CreateCharacterBaseClassStatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateCharacterPrestigeClassTable extends Migration
      */
     public function up()
     {
-        Schema::create('character_prestige_class', function (Blueprint $table) {
+        Schema::create('character_base_class_stats', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('character_id')->unsigned();
             $table->foreign('character_id')->references('id')->on('characters');
-            $table->bigInteger('prestige_class_id')->unsigned();
-            $table->foreign('prestige_class_id')->references('id')->on('prestige_classes');
+            $table->bigInteger('base_class_id')->unsigned();
+            $table->foreign('base_class_id')->references('id')->on('base_classes');
+            $table->integer('level');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateCharacterPrestigeClassTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('character_prestige_class');
+        Schema::dropIfExists('character_base_class_stats');
     }
 }

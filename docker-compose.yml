@@ -1,6 +1,8 @@
 version: '3'
 networks:
   laravel:
+volumes:
+  dbdata:
 services:
   nginx:
     image: nginx:stable-alpine
@@ -26,6 +28,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
       MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - dbdata:/var/lib/mysql
     networks:
       - laravel
   php:

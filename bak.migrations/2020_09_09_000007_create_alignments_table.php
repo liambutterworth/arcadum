@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeitiesTable extends Migration
+class CreateAlignmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateDeitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('deities', function (Blueprint $table) {
+        Schema::create('alignments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('pantheon_id')->unsigned();
-            $table->foreign('pantheon_id')->references('id')->on('pantheons');
             $table->string('name');
-            $table->text('blurb');
-            $table->text('description');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ class CreateDeitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('deities');
+        Schema::dropIfExists('alignments');
     }
 }

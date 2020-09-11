@@ -15,11 +15,17 @@ class CreateCampaignsTable extends Migration
     {
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('prequel_id')->unsigned()->nullable();
+            $table->foreign('prequel_id')->references('id')->on('campaigns');
+            $table->bigInteger('sequel_id')->unsigned()->nullable();
+            $table->foreign('sequel_id')->references('id')->on('campaigns');
             $table->string('name');
             $table->text('description');
-            $table->dateTime('finished_at');
+            $table->string('scheduled_interval');
+            $table->string('scheduled_timezone');
             $table->dateTime('scheduled_at');
             $table->dateTime('started_at');
+            $table->dateTime('finished_at')->nullable();
             $table->timestamps();
         });
     }

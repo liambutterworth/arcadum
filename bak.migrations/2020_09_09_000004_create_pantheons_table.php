@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRacesTable extends Migration
+class CreatePantheonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateRacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('races', function (Blueprint $table) {
+        Schema::create('pantheons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('blurb');
             $table->text('description');
             $table->timestamps();
         });
@@ -29,6 +28,6 @@ class CreateRacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('races');
+        Schema::dropIfExists('pantheons');
     }
 }

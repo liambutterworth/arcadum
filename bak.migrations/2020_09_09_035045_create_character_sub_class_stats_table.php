@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCharacterSubClassTable extends Migration
+class CreateCharacterSubClassStatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateCharacterSubClassTable extends Migration
      */
     public function up()
     {
-        Schema::create('character_sub_class', function (Blueprint $table) {
+        Schema::create('character_sub_class_stats', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('character_id')->unsigned();
             $table->foreign('character_id')->references('id')->on('characters');
             $table->bigInteger('sub_class_id')->unsigned();
             $table->foreign('sub_class_id')->references('id')->on('sub_classes');
+            $table->integer('level');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateCharacterSubClassTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('character_sub_class');
+        Schema::dropIfExists('character_sub_class_stats');
     }
 }

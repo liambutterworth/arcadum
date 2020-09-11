@@ -1,16 +1,23 @@
 <?php
 
-namespace App\Models\Classes;
+namespace App\Models;
 
 use App\Models\Character;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use App\Models\Classes\PrestigeClassStats;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PrestigeClass extends AbstractClass
 {
     protected $table = 'prestige_classes';
 
-    public function character(): HasManyThrough
+    public function characters(): BelongsToMany
     {
-        return $this->hasManyThrough(Character::class, 'character_prestige_class');
+        return $this->belongsToMany(Character::class, 'character_prestige_class');
+    }
+
+    public function stats(): HasMany
+    {
+        return $this->hasMany(PrestigeClassStats::class);
     }
 }

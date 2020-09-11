@@ -3,14 +3,21 @@
 namespace App\Models\Classes;
 
 use App\Models\Character;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use App\Models\Classes\SubClassStats;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SubClass extends AbstractClass
 {
     protected $table = 'sub_classes';
 
-    public function characters(): HasManyThrough
+    public function characters(): BelongsToMany
     {
-        return $this->hasManyThrough(Character::class, 'character_sub_class');
+        return $this->belongsToMany(Character::class, 'character_sub_class');
+    }
+
+    public function stats(): HasMany
+    {
+        return $this->hasMany(SubClassStats::class);
     }
 }

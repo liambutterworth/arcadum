@@ -3,15 +3,21 @@
 namespace App\Models;
 
 use App\Models\Campaign;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Episode extends Model
 {
-    protected $table = 'episodes';
+    use HasFactory;
 
-    public function campaigns(): HasOne;
+    /**
+     * Campaign relationship
+     *
+     * @return HasOne
+     */
+    public function campaign(): BelongsTo
     {
-        return $this->hasOne(Campaign::class);
+        return $this->belongsTo(Campaign::class);
     }
 }
