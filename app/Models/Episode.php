@@ -20,4 +20,14 @@ class Episode extends Model
     {
         return $this->belongsTo(Campaign::class);
     }
+
+    /**
+     * Number accessor
+     *
+     * @return int
+     */
+    public function getNumberAttribute(): int
+    {
+        return $this->index + 1;
+    }
 }

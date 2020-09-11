@@ -35,9 +35,14 @@ class Campaign extends Model
         return $this->belongsToMany(Series::class);
     }
 
-    public function episodeCount(): int
+    /**
+     * Episode count accessor
+     *
+     * @return int
+     */
+    public function getEpisodeCountAttribute(): int
     {
-        return $this->episodes instanceof Collection ? $this->episodes->count() : 0;
+        return is_null($this->episodes) ? 0 : $this->episodes->count();
     }
 
     /**
@@ -48,7 +53,6 @@ class Campaign extends Model
      */
     public function reorderEpisodes($episodes = null): Campaign
     {
-        dd('reorder episodes');
         if (is_null($episodes)) {
             $episodes = $this->episodes;
         }

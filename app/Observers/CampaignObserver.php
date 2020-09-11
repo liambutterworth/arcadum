@@ -15,10 +15,9 @@ class CampaignObserver
     public function deleting(Campaign $campaign)
     {
         $series = $campaign->series;
-        // $campaign->detach($series);
-        // $campaign->episodes()->delete();
+        $campaign->series()->detach();
 
-        $series->each(function($series) {
+        $series->each(function($series) use($campaign) {
             $series->reorderCampaigns();
         });
     }

@@ -24,6 +24,16 @@ class Series extends Model
     }
 
     /**
+     * Campaign count accessor
+     *
+     * @return int
+     */
+    public function getCampaignCountAttribute(): int
+    {
+        return is_null($this->campaigns) ? 0 : $this->campaigns->count();
+    }
+
+    /**
      * Add campaign
      *
      * @param int|Campaign $campaign either an id or model
@@ -31,8 +41,7 @@ class Series extends Model
      */
     public function addCampaign($campaign): Series
     {
-        $count = $this->campaigns()->get()->count();
-        $this->campaigns()->attach($campaign, [ 'index' => $count ]);
+        $this->campaigns()->attach($campaign, [ 'index' => $this->campaign_count ]);
         return $this;
     }
 
@@ -44,39 +53,14 @@ class Series extends Model
      */
     public function addCampaigns($campaigns): Series
     {
-        $count = $this->campaigns()->get()->count();
         $attach = [];
 
         foreach ($campaigns as $index => $campaign) {
             $id = $campaign instanceof Campaign ? $campaign->id : $campaign;
-            $attach[$id] = [ 'index' => $index + $count ];
+            $attach[$id] = [ 'index' => $index + $this->campaign_count ];
         }
 
         $this->campaigns()->attach($attach);
-        return $this;
-    }
-
-    /**
-     * Remove campaign
-     *
-     * @param int|Campaign $campaign either an id or model
-     * @return Series
-     */
-    public function removeCampaign($campaign): Series
-    {
-        $this->campaigns()->detach($campaign);
-        return $this;
-    }
-
-    /**
-     * Remove multiple campaings
-     *
-     * @param array|Collection $campaigns can consist of either ids or models
-     * @return Series
-     */
-    public function removeCampaigns($campaigns): Series
-    {
-        $this->campaigns()->detach($campaigns);
         return $this;
     }
 

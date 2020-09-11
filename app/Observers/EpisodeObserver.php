@@ -14,7 +14,7 @@ class EpisodeObserver
      */
     public function creating(Episode $episode)
     {
-        $episode->index = $episode->campaign->episodeCount();
+        $episode->index = $episode->campaign->episode_count;
     }
 
     /**
