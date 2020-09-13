@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Series;
+use App\Models\Origin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class SeriesFactory extends Factory
+class OriginFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Series::class;
+    protected $model = Origin::class;
 
     /**
      * Define the model's default state.

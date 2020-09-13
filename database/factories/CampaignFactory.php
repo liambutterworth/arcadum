@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Campaign;
-use App\Models\Episode;
+use App\Models\Session;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -24,13 +24,8 @@ class CampaignFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function(Campaign $campaign) {
-            $episodes = Episode::factory()->count(5)->make();
-
-            $episodes->each(function($episodes, $index) {
-                $episodes->index = $index;
-            });
-
-            $campaign->episodes()->saveMany($episodes);
+            $sessions = Session::factory()->count(rand(4, 12))->make();
+            $campaign->sessions()->saveMany($sessions);
         });
     }
 

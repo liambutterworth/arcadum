@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Character;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,9 +14,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         if (app()->environment('production')) {
-            $this->call(ProductionSeeder:class);
-        } else{
-            $this->call(LocalSeeder::class);
+            $this->call(ProductionSeeder::class);
+        } else {
+            $this->call(DevelopmentSeeder::class);
         }
     }
 }

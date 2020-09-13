@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Models\Planet;
+use App\Models\Region;
 Route::get('/{any?}', function () {
+    // $planet = Planet::find(2);
+    $region = Region::find(1);
+    $region->planet_id = 1;
+    $region->save();
+    // $planet->regions()->save($region);
+    // $region->planet()->save($planet);
+    // dd($planet->name, $region->name);
     return view('home');
 });

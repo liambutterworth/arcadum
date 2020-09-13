@@ -3,81 +3,53 @@
 namespace App\Models;
 
 use App\Models\Campaign;
+use App\Models\Installment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Series extends Model
 {
     use HasFactory;
 
-    /**
-     * Campaign relationship
-     *
-     * @return BelongsToMany
-     */
-    public function campaigns(): BelongsToMany
+    public function serializableMorphToMany(string $class): MorphToMany
     {
-        return $this->belongsToMany(Campaign::class)->withPivot('index')->orderBy('campaign_series.index');
+        return $this
+            ->morphedByMany($class, 'serializable', 'installments')
+            ->withPivot('index')
+            ->using(Installment::class)
+            ->orderBy('installments.index');
     }
 
-    /**
-     * Campaign count accessor
-     *
-     * @return int
-     */
-    public function getCampaignCountAttribute(): int
+    public function campaigns(): MorphToMany
     {
-        return is_null($this->campaigns) ? 0 : $this->campaigns->count();
+        return $this->serializableMorphToMany(Campaign::class);
     }
 
-    /**
-     * Add campaign
-     *
-     * @param int|Campaign $campaign either an id or model
-     * @return Series
-     */
-    public function addCampaign($campaign): Series
+    public function installments(): HasMany
     {
-        $this->campaigns()->attach($campaign, [ 'index' => $this->campaign_count ]);
-        return $this;
+        return $this->hasMany(Installment::class);
     }
 
-    /**
-     * Add multiple campaigns
-     *
-     * @param array|Collection $campaigns can consist of either ids or models
-     * @return Series
-     */
-    public function addCampaigns($campaigns): Series
+    public function getInstallmentCountAttribute(): int
     {
-        $attach = [];
+        return is_null($this->installments) ? 0 : $this->installments->count();
+    }
 
-        foreach ($campaigns as $index => $campaign) {
-            $id = $campaign instanceof Campaign ? $campaign->id : $campaign;
-            $attach[$id] = [ 'index' => $index + $this->campaign_count ];
+    public function reorderInstallments(?array $installments = null): Series
+    {
+        if (is_null($installments)) {
+            $installments = $this->installments->pluck('id');
         }
 
-        $this->campaigns()->attach($attach);
-        return $this;
-    }
+        foreach ($installments as $index => $installment) {
+            if (!$installment instanceof Installment) {
+                $installment = Installment::find($installment);
+            }
 
-    /**
-     * Reorder campaign indexes
-     *
-     * @param array|Collection|null $campaigns can consist of either ids or models
-     * @return Series
-     */
-    public function reorderCampaigns($campaigns = null): Series
-    {
-        if (is_null($campaigns)) {
-            $campaigns = $this->campaigns;
-        }
-
-        foreach ($campaigns as $index => $campaign) {
-            $this->campaigns()->updateExistingPivot($campaign, [ 'index' => $index ]);
+            $installment->index = $index;
+            $installment->save();
         }
 
         return $this;

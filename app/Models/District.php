@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Character;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Alignment extends Model
+class District extends Model
 {
     use HasFactory;
 }

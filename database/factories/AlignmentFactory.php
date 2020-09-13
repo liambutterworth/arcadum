@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Series;
+use App\Models\Alignment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class SeriesFactory extends Factory
+class AlignmentFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Series::class;
+    protected $model = Alignment::class;
 
     /**
      * Define the model's default state.
@@ -23,7 +23,7 @@ class SeriesFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->text(20),
+            'name' => $this->faker->text(15),
         ];
     }
 }

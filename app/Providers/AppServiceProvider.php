@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Campaign;
-use App\Models\Episode;
-use App\Observers\CampaignObserver;
-use App\Observers\EpisodeObserver;
+use App\Models\Installment;
+use App\Models\Region;
+use App\Models\Session;
+use App\Observers\SessionObserver;
+use App\Observers\InstallmentObserver;
+use App\Observers\RegionObserver;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,7 +31,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Campaign::observe(CampaignObserver::class);
-        Episode::observe(EpisodeObserver::class);
+        Relation::morphMap([
+            'campaign' => Campaign::class,
+        ]);
+
+        Session::observe(SessionObserver::class);
+        Installment::observe(InstallmentObserver::class);
+        Region::observe(RegionObserver::class);
     }
 }

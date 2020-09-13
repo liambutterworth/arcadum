@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Episode;
-use App\Models\Series;
+use App\Models\Concerns\HasSeries;
+use App\Models\Session;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,56 +13,31 @@ use Illuminate\Support\Collection;
 
 class Campaign extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSeries;
 
-    /**
-     * Episode relationship
-     *
-     * @return HasMany
-     */
-    public function episodes(): HasMany
+    public function sessions(): HasMany
     {
-        return $this->hasMany(Episode::class)->orderBy('episodes.index');
+        return $this->hasMany(Session::class)->orderBy('sessions.index');
     }
 
-    /**
-     * Series relationship
-     *
-     * @return BelongsToMany
-     */
-    public function series(): BelongsToMany
+    public function getSessionCountAttribute(): int
     {
-        return $this->belongsToMany(Series::class);
+        return is_null($this->sessions) ? 0 : $this->sessions->count();
     }
 
-    /**
-     * Episode count accessor
-     *
-     * @return int
-     */
-    public function getEpisodeCountAttribute(): int
+    public function reorderSessions(?array $sessions = null): void
     {
-        return is_null($this->episodes) ? 0 : $this->episodes->count();
-    }
-
-    /**
-     * Reorder episodes
-     *
-     * @param array|Collection|null $campaigns can consist of either ids or models
-     * @return Campaign
-     */
-    public function reorderEpisodes($episodes = null): Campaign
-    {
-        if (is_null($episodes)) {
-            $episodes = $this->episodes;
+        if (is_null($sessions)) {
+            $sessions = $this->sessions;
         }
 
-        foreach ($episodes as $index => $episode) {
-            $episode = $episode instanceof Episode ? $episode : Episode::find($episode);
-            $episode->index = $index;
-            $episode->save();
-        }
+        foreach ($sessions as $index => $session) {
+            if (!$session instanceof session) {
+                $session = Session::find($session);
+            }
 
-        return $this;
+            $session->index = $index;
+            $session->save();
+        }
     }
 }

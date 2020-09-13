@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class ProductionSeeder extends Seeder
+class DevelopmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +15,11 @@ class ProductionSeeder extends Seeder
     {
         $this->call([
             AlignmentSeeder::class,
+            CampaignSeeder::class,
+            PantheonSeeder::class,
+            PlanetSeeder::class,
+            RaceSeeder::class,
+            SeriesSeeder::class,
         ]);
     }
 }

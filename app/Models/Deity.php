@@ -6,19 +6,11 @@ use App\Models\Character;
 use App\Models\Pantheon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Deity extends Model
 {
     use HasFactory;
-
-    protected $table = 'deities';
-
-    public function characters(): HasMany
-    {
-        return $this->hasMany(Character::class);
-    }
 
     public function pantheon(): HasOne
     {
