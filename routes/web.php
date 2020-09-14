@@ -13,15 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-use App\Models\Planet;
-use App\Models\Region;
+use App\Models\Campaign;
 Route::get('/{any?}', function () {
-    // $planet = Planet::find(2);
-    $region = Region::find(1);
-    $region->planet_id = 1;
-    $region->save();
-    // $planet->regions()->save($region);
-    // $region->planet()->save($planet);
-    // dd($planet->name, $region->name);
+    $c = Campaign::find(1);
+    dd($c->party->members);
     return view('home');
 });

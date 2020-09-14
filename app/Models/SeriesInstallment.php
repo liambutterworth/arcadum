@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Series;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Installment extends MorphPivot
+class SeriesInstallment extends MorphPivot
 {
-    protected $table = 'installments';
+    protected $table = 'series_installments';
 
     public function series(): BelongsTo
     {

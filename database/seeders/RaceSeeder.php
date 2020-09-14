@@ -7,11 +7,6 @@ use Illuminate\Database\Seeder;
 
 class RaceSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $human = Race::factory()->create([ 'name' => 'Human' ]);
@@ -19,6 +14,8 @@ class RaceSeeder extends Seeder
         $humanIllithari = Race::factory()->create([ 'name' => 'Human Illiithari' ]);
         $dragon = Race::factory()->create([ 'name' => 'Dragon' ]);
         $changeling = Race::factory()->create([ 'name' => 'Changeling' ]);
+        $elf = Race::factory()->create([ 'name' => 'Elf' ]);
+        $fey = Race::factory()->create([ 'name' => 'Fey' ]);
         $halfElf = Race::factory()->create([ 'name' => 'Half Elf' ]);
         $halfling = Race::factory()->create([ 'name' => 'Halfling' ]);
         $planeTouched = Race::factory()->create([ 'name' => 'Plane Touched' ]);
@@ -27,9 +24,11 @@ class RaceSeeder extends Seeder
         $tieflingAsmodeus = Race::factory()->create([ 'name' => 'Tiefling Asmodeus' ]);
         $tieflingDispatcher = Race::factory()->create([ 'name' => 'Tiefling Dispatcher' ]);
 
-        $human->ancestors()->save($dragon);
-        $human->descendents()->saveMany([ $changeling, $halfElf, $halfling ]);
+        $human->geneticAncestors()->save($dragon);
+        $human->geneticDescendents()->saveMany([ $changeling, $halfElf, $halfling ]);
         $human->children()->saveMany([ $variantHuman, $humanIllithari ]);
+        $elf->children()->save($halfElf);
+        $fey->children()->save($changeling);
         $planeTouched->children()->saveMany([ $tiefling, $waterGanasi ]);
         $tiefling->children()->saveMany([ $tieflingAsmodeus, $tieflingDispatcher ]);
     }

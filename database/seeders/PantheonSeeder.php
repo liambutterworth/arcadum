@@ -8,11 +8,6 @@ use Illuminate\Database\Seeder;
 
 class PantheonSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Pantheon::factory()->create([ 'name' => 'White Pantheon' ])->deities()->saveMany([

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Campaign;
-use App\Models\Installment;
+use App\Models\SeriesInstallment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,10 +16,10 @@ class Series extends Model
     public function serializableMorphToMany(string $class): MorphToMany
     {
         return $this
-            ->morphedByMany($class, 'serializable', 'installments')
+            ->morphedByMany($class, 'serializable', 'series_installments')
             ->withPivot('index')
-            ->using(Installment::class)
-            ->orderBy('installments.index');
+            ->using(SeriesInstallment::class)
+            ->orderBy('series_installments.index');
     }
 
     public function campaigns(): MorphToMany
@@ -29,7 +29,7 @@ class Series extends Model
 
     public function installments(): HasMany
     {
-        return $this->hasMany(Installment::class);
+        return $this->hasMany(SeriesInstallment::class);
     }
 
     public function getInstallmentCountAttribute(): int
@@ -44,8 +44,8 @@ class Series extends Model
         }
 
         foreach ($installments as $index => $installment) {
-            if (!$installment instanceof Installment) {
-                $installment = Installment::find($installment);
+            if (!$installment instanceof SeriesInstallment) {
+                $installment = SeriesInstallment::find($installment);
             }
 
             $installment->index = $index;

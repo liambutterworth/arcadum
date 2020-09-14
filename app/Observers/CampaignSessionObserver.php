@@ -2,16 +2,16 @@
 
 namespace App\Observers;
 
-use App\Models\Session;
+use App\Models\CampaignSession;
 
-class SessionObserver
+class CampaignSessionObserver
 {
-    public function creating(Session $session)
+    public function creating(CampaignSession $session)
     {
         $session->index = $session->campaign->session_count;
     }
 
-    public function deleted(Session $session)
+    public function deleted(CampaignSession $session)
     {
         $session->campaign->reorderSessions();
     }

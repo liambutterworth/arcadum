@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePantheonsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('pantheons', function (Blueprint $table) {
@@ -20,11 +15,6 @@ class CreatePantheonsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('pantheons');
