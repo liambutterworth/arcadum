@@ -13,6 +13,7 @@ class DevelopmentSeeder extends Seeder
             PantheonSeeder::class,
             RaceSeeder::class,
             LocationSeeder::class,
+            ClassSeeder::class,
             CampaignSeeder::class,
         ]);
     }

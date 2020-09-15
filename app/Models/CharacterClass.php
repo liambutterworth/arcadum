@@ -4,30 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CharacterClass extends Model
 {
     use HasFactory;
 
-    public function characters(): BelongsToMany
+    public function character(): BelongsTo
     {
-        return $this->belongsToMany(CharacterClass::class)->using(CharacterClassMaster::class);
+        return $this->belongsTo(Character::class);
     }
 
-    public function archetypes(): HasMany
+    public function type(): BelongsTo
     {
-        return $this->hasMany(CharacterClassArchetype::class);
+        return $this->belongsTo(CharacterClassType::class);
     }
 
-    public function spells(): BelongsToMany
+    public function archetype(): BelongsTo
     {
-        return $this->belongsToMany(Spell::class);
-    }
-
-    public function feats(): BelongsToMany
-    {
-        return $this->belongsToMany(Feat::class);
+        return $this->belongsTo(CharacterClassArchetype::class);
     }
 }
