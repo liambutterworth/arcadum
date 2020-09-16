@@ -18,9 +18,8 @@ class Feat extends Model
 
     public static function availableFor(Character $character)
     {
-        $query = Feat::with('races');
-        $query->whereDoesntHave('races');
-        
+        $query = Feat::with('races')->whereDoesntHave('races');
+
         $query->orWhereHas('races', function($query) use($character) {
             $query->where('races.id', $character->race_id);
         });

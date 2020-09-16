@@ -16,6 +16,7 @@ class CreateCharacterClassTypesTable extends Migration
         Schema::create('character_class_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('required_stats');
             $table->timestamps();
         });
     }

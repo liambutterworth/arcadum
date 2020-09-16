@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasLevels;
-use App\Support\Requirable;
+use App\Models\Concerns\HasRequiredStats;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CharacterClassType extends Model implements Requirable
+class CharacterClassType extends Model
 {
-    use HasFactory, HasLevels;
+    use HasFactory, HasLevels, HasRequiredStats;
 
     public function archetypes(): HasMany
     {

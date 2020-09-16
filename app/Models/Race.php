@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToSelf;
-use App\Support\Requirable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Race extends Model implements Requirable
+class Race extends Model
 {
     use BelongsToSelf, HasFactory;
 
@@ -31,14 +30,5 @@ class Race extends Model implements Requirable
     public function feats(): BelongsToMany
     {
         return $this->belongsToMany(Feat::class);
-    }
-
-    public function require(): Requirement
-    {
-        return Requirement::make([
-            'key' => 'race_id',
-            'operator' => '=',
-            'value' => $this->id,
-        ]);
     }
 }
