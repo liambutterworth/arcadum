@@ -2,27 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasLevels;
+use App\Support\Requirable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CharacterClassType extends Model
+class CharacterClassType extends Model implements Requirable
 {
-    use HasFactory;
+    use HasFactory, HasLevels;
 
     public function archetypes(): HasMany
     {
-        return $this->hasMany(CharacterClassArchetype::class, 'type_id');
+        return $this->hasMany(CharacterClassArchetype::class);
     }
 
-    public function levels(): HasMany
+    public function characterClasses(): HasMany
     {
-        return $this->hasMany(CharacterClassTypeLevel::class, 'type_id');
-    }
-
-    public function level(int $level): ?CharacterClassTypeLevel
-    {
-        return $this->levels()->where('level', $level)->first();
+        return $this->hasMany(CharacterClass::class);
     }
 }

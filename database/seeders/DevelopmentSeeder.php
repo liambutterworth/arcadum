@@ -12,6 +12,7 @@ class DevelopmentSeeder extends Seeder
             AlignmentSeeder::class,
             PantheonSeeder::class,
             RaceSeeder::class,
+            FeatSeeder::class,
             LocationSeeder::class,
             ClassSeeder::class,
             CampaignSeeder::class,

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Campaign;
 use App\Models\CampaignSession;
+use App\Models\CharacterClassType;
+use App\Models\CharacterClassArchetype;
 use App\Models\Region;
 use App\Models\SeriesInstallment;
 use App\Observers\CampaignSessionObserver;
@@ -33,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::morphMap([
             'campaign' => Campaign::class,
+            'character_class_type' => CharacterClassType::class,
+            'character_class_archetype' => CharacterClassArchetype::class,
         ]);
 
         CampaignSession::observe(CampaignSessionObserver::class);

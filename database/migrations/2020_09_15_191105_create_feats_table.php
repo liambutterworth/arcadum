@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCharacterClassFeaturesTable extends Migration
+class CreateFeatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateCharacterClassFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('character_class_features', function (Blueprint $table) {
+        Schema::create('feats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('required_stats')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateCharacterClassFeaturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('character_class_features');
+        Schema::dropIfExists('feats');
     }
 }

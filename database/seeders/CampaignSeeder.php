@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Campaign;
 use App\Models\Character;
+use App\Models\CharacterClass;
+use App\Models\CharacterStats;
 use App\Models\Series;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -122,6 +124,11 @@ class CampaignSeeder extends Seeder
         $vaeri = $momo->characters()->save(Character::factory()->make([ 'name' => 'Vaeri' ]));
         $madeline = $bunnyGif->characters()->save(Character::factory()->make([ 'name' => 'Madeline' ]));
         $zara = $zentreya->characters()->save(Character::factory()->make([ 'name' => 'Zara' ]));
+
+        // classes
+        Character::all()->each(function($character) {
+            $character->classes()->save(CharacterClass::factory()->make());
+        });
 
         // parties
         $mawOfAbbadon->party->members()->saveMany([ $maddMorc, $derekDranf, $neve, $ives, $seren ]);

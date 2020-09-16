@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -19,16 +20,48 @@ class Character extends Model
 
     public function classes(): HasMany
     {
-        return $this->hasMany(CharaterClass::class);
+        return $this->hasMany(CharacterClass::class);
     }
 
-    public function types(): BelongsToMany
+    public function user(): BelongsTo
     {
-        return $this->belongsToMany(CharacterClassType::class)->using(CharacterClass::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function race(): BelongsTo
+    {
+        return $this->belongsTo(Race::class);
+    }
+
+    public function origin(): BelongsTo
+    {
+        return $this->belongsTo(Origin::class);
+    }
+
+    public function deity(): BelongsTo
+    {
+        return $this->belongsTo(Deity::class);
+    }
+
+    public function alignment(): BelongsTo
+    {
+        return $this->belongsTo(Alignment::class);
     }
 
     public function parties(): BelongsToMany
     {
         return $this->belongsToMany(Party::class, 'party_members')->using(PartyMember::class);
+    }
+
+    public function getAvailableFeats()
+    {
+        return Feat::getAvailableFor($this);
+    }
+
+    public function getAvailableClassees()
+    {
+        return CharacterClassType::all()->filter(function($type) {
+            // $type->
+        });
     }
 }

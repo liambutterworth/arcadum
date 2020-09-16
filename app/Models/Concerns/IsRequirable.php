@@ -3,12 +3,15 @@
 namespace App\Models\Concerns;
 
 use App\Models\Requirement;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait IsRequireable
 {
-    public function requirements(): MorphMany
-    {
-        return $this->morphMany(Requirement::class, 'requireable');
-    }
+    // public function require($instance)
+    // {
+    //     return Requirement::make([
+    //         'key' => $instance->getForeignKey(),
+    //         'operator' => '=',
+    //         'value' => $instance->id,
+    //     ]);
+    // }
 }

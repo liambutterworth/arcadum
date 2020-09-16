@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Alignment;
 use App\Models\Character;
+use App\Models\CharacterClass;
 use App\Models\Deity;
 use App\Models\Origin;
 use App\Models\Race;
@@ -17,11 +18,11 @@ class CharacterFactory extends Factory
     public function configure()
     {
         return $this->afterMaking(function(Character $character) {
-            if (!$character->alignment_id) $character->alignment_id = Alignment::inRandomOrder()->first()->id;
-            if (!$character->deity_id) $character->deity_id = Deity::inRandomOrder()->first()->id;
-            if (!$character->origin_id) $character->origin_id = Origin::inRandomOrder()->first()->id;
-            if (!$character->race_id) $character->race_id = Race::inRandomOrder()->first()->id;
-            if (!$character->user_id) $character->user_id = User::inRandomOrder()->first()->id;
+            if (!$character->user) $character->user()->associate(User::inRandomOrder()->first());
+            if (!$character->race) $character->race()->associate(Race::inRandomOrder()->first());
+            if (!$character->origin) $character->origin()->associate(Origin::inRandomOrder()->first());
+            if (!$character->deity) $character->deity()->associate(Deity::inRandomOrder()->first());
+            if (!$character->alignment) $character->alignment()->associate(Alignment::inRandomOrder()->first());
         });
     }
 
@@ -29,6 +30,12 @@ class CharacterFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'strength' => $this->faker->numberBetween(1, 20),
+            'dexterity' => $this->faker->numberBetween(1, 20),
+            'constitution' => $this->faker->numberBetween(1, 20),
+            'intelligence' => $this->faker->numberBetween(1, 20),
+            'wisdom' => $this->faker->numberBetween(1, 20),
+            'charisma' => $this->faker->numberBetween(1, 20),
         ];
     }
 }

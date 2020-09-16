@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\CharacterClassType;
+use App\Models\Feature;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CharacterClassTypeFactory extends Factory
+class FeatureFactory extends Factory
 {
-    protected $model = CharacterClassType::class;
+    protected $model = Feature::class;
 
     public function definition()
     {

@@ -17,7 +17,7 @@ class CharacterClass extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(CharacterClassType::class);
+        return $this->belongsTo(CharacterClassType::class, 'character_class_type_id');
     }
 
     public function archetype(): BelongsTo

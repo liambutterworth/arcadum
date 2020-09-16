@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// use App\Models\CharacterClassType;
 Route::get('/{any?}', function () {
-    // $c = CharacterClassType::find(1);
-    // $a = $c->archetypes->firstWhere('name', 'Berserker');
-    // dd($a->level(3)->features);
     return view('home');
 });

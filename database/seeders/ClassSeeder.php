@@ -4,10 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\CharacterClass;
 use App\Models\CharacterClassArchetype;
-use App\Models\CharacterClassArchetypeLevel;
-use App\Models\CharacterClassFeature;
 use App\Models\CharacterClassType;
-use App\Models\CharacterClassTypeLevel;
+use App\Models\Feature;
+use App\Models\Level;
 use Illuminate\Database\Seeder;
 
 class ClassSeeder extends Seeder
@@ -29,11 +28,11 @@ class ClassSeeder extends Seeder
         $wizard = CharacterClassType::factory()->create([ 'name' => 'Wizard' ]);
 
         // class type levels
-        $barbarian->levels()->save(CharacterClassTypeLevel::factory()->make([ 'level' => 1, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage_bonus' => 2 ]));
-        $barbarian->levels()->save(CharacterClassTypeLevel::factory()->make([ 'level' => 2, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage_bonus' => 2 ]));
-        $barbarian->levels()->save(CharacterClassTypeLevel::factory()->make([ 'level' => 3, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage_bonus' => 2 ]));
-        $barbarian->levels()->save(CharacterClassTypeLevel::factory()->make([ 'level' => 4, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage_bonus' => 2 ]));
-        $barbarian->levels()->save(CharacterClassTypeLevel::factory()->make([ 'level' => 5, 'proficiency_bonus' => 3, 'rages' => 3, 'rage_damage_bonus' => 2 ]));
+        $barbarian->levels()->save(Level::factory()->make([ 'level' => 1, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
+        $barbarian->levels()->save(Level::factory()->make([ 'level' => 2, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
+        $barbarian->levels()->save(Level::factory()->make([ 'level' => 3, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
+        $barbarian->levels()->save(Level::factory()->make([ 'level' => 4, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
+        $barbarian->levels()->save(Level::factory()->make([ 'level' => 5, 'proficiency_bonus' => 3, 'rages' => 3, 'rage_damage' => 2 ]));
 
         // class archetypes
         $ancestralGuardian = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Ancestral Guardian' ]));
@@ -44,15 +43,15 @@ class ClassSeeder extends Seeder
         $zealot = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Zealot' ]));
 
         // class archetype levels
-        $berserker->levels()->save(CharacterClassArchetypeLevel::factory()->make([ 'level' => 3 ]));
-        $berserker->levels()->save(CharacterClassArchetypeLevel::factory()->make([ 'level' => 6 ]));
+        $berserker->levels()->save(Level::factory()->make([ 'level' => 3 ]));
+        $berserker->levels()->save(Level::factory()->make([ 'level' => 6 ]));
 
         // class features
-        $recklessAttack = CharacterClassFeature::factory()->create([ 'name' => 'Reckless Attack' ]);
-        $extraAttack = CharacterClassFeature::factory()->create([ 'name' => 'Extra Attack' ]);
-        $fastMovement = CharacterClassFeature::factory()->create([ 'name' => 'Fast Movement' ]);
-        $frenzy = CharacterClassFeature::factory()->create([ 'name' => 'Frenzy' ]);
-        $mindlessRage = CharacterClassFeature::factory()->create([ 'name' => 'Mindless Rage' ]);
+        $recklessAttack = Feature::factory()->create([ 'name' => 'Reckless Attack' ]);
+        $extraAttack = Feature::factory()->create([ 'name' => 'Extra Attack' ]);
+        $fastMovement = Feature::factory()->create([ 'name' => 'Fast Movement' ]);
+        $frenzy = Feature::factory()->create([ 'name' => 'Frenzy' ]);
+        $mindlessRage = Feature::factory()->create([ 'name' => 'Mindless Rage' ]);
 
         // level features
         $barbarian->level(2)->features()->save($recklessAttack);

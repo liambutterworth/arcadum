@@ -16,6 +16,12 @@ class CreateCharactersTable extends Migration
             $table->foreignId('race_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
+            $table->integer('strength');
+            $table->integer('dexterity');
+            $table->integer('constitution');
+            $table->integer('intelligence');
+            $table->integer('wisdom');
+            $table->integer('charisma');
             $table->timestamps();
         });
     }

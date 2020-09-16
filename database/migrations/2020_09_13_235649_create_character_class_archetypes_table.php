@@ -10,8 +10,9 @@ class CreateCharacterClassArchetypesTable extends Migration
     {
         Schema::create('character_class_archetypes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('type_id')->unsigned();
-            $table->foreign('type_id')->references('id')->on('character_class_types');
+            $table->foreignId('character_class_type_id')->constrained();
+            // $table->bigInteger('type_id')->unsigned();
+            // $table->foreign('type_id')->references('id')->on('character_class_types');
             $table->string('name');
             $table->timestamps();
         });
