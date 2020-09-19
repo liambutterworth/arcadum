@@ -1,7 +1,3 @@
-//
-// Routes
-//
-
 import HomePage from 'pages/HomePage';
 import CharactersPage from 'pages/CharactersPage';
 

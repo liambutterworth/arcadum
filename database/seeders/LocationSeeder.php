@@ -2,73 +2,153 @@
 
 namespace Database\Seeders;
 
-use App\Models\Municipality;
-use App\Models\MunicipalityType;
-use App\Models\Origin;
-use App\Models\Planet;
-use App\Models\Region;
-use App\Models\RegionType;
+use App\Models\Location;
+use App\Models\LocationType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class LocationSeeder extends Seeder
 {
     public function run()
     {
-        // planets
-        $verum = Planet::factory()->create([ 'name' => 'Verum' ]);
-        $queirg = Planet::factory()->create([ 'name' => 'Queirg' ]);
+        $this->createTypes([
+            'Planet',
+            'Continent',
+            'Country',
+            'Wasteland',
+            'Hills',
+            'Plains',
+            'Coast',
+            'Riverlands',
+            'Valley',
+            'Mountains',
+            'Desert',
+            'Bay',
+            'Tundra',
+            'IDK',
+            'Forest',
+            'Woods',
+            'Jungle',
+            'Fields',
+            'City',
+            'Town',
+            'Village',
+        ]);
 
-        // region types
-        $continent = RegionType::factory()->create([ 'name' => 'Continent' ]);
-        $country = RegionType::factory()->create([ 'name' => 'Country' ]);
-        $forest = RegionType::factory()->create([ 'name' => 'Forest' ]);
-        $wasteland = RegionType::factory()->create([ 'name' => 'Wasteland' ]);
-        $hills = RegionType::factory()->create([ 'name' => 'Hills' ]);
-        $plains = RegionType::factory()->create([ 'name' => 'Plains' ]);
+        $this->create([
+            'Verum' => [ 'type' => 'planet' ],
+            'Kalkatesh' => [ 'type' => 'continent', 'parent' => 'verum' ],
+            'Bloodwave Bay' => [ 'type' => 'country', 'parent' => 'kalkatesh' ],
+            'The Freelands' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'The Wild Isles' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'Connatorga' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'Cliffs of Dane' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'The Badlands' => [ 'type' => 'idk', 'parent' => 'kalkatesh' ],
+            'Eyes of Sorrow' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'Nightlands' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'Rotten Would' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'The Culn' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'Steton' => [ 'type' => 'idk', 'parent' => 'kalkatesh' ],
+            'Brutal Coast' => [ 'type' => 'coast', 'parent' => 'steton' ],
+            'Highriver' => [ 'type' => 'riverlands', 'parent' => 'steton' ],
+            "King's Crest" => [ 'type' => 'idk', 'parent' => 'steton' ],
+            'Windlance Valley' => [ 'type' => 'idk', 'parent' => 'steton' ],
+            'Maelstrom Mountains' => [ 'type' => 'mountains', 'parent' => 'steton' ],
+            'Dolten' => [ 'type' => 'mountains', 'parent' => 'kalkatesh' ],
+            'Abhorrent Arboreal' => [ 'type' => 'forest', 'parent' => 'dolten' ],
+            'Fanged Hills' => [ 'type' => 'hills', 'parent' => 'abhorrent-arboreal' ],
+            'Grasping Thicket' => [ 'type' => 'forest', 'parent' => 'abhorrent-arboreal' ],
+            'Gravewatch' => [ 'type' => 'idk', 'parent' => 'grasping-thicket' ],
+            'Bleak Reaches' => [ 'type' => 'idk', 'parent' => 'abhorrent-arboreal' ],
+            'Coin Copse' => [ 'type' => 'idk', 'parent' => 'abhorrent-arboreal' ],
+            'Howling Hills' => [ 'type' => 'hills', 'parent' => 'abhorrent-arboreal' ],
+            'Feywood' => [ 'type' => 'woods', 'parent' => 'abhorrent-arboreal' ],
+            'Douglasfall' => [ 'type' => 'idk', 'parent' => 'feywood' ],
+            'Webwood' => [ 'type' => 'woods', 'parent' => 'abhorrent-arboreal' ],
+            'Pale Fields' => [ 'type' => 'fields', 'parent' => 'abhorrent-arboreal' ],
+            'Daborak' => [ 'type' => 'mountains', 'parent' => 'kalkatesh' ],
+            'The Rolling Wastes' => [ 'type' => 'wasteland', 'parent' => 'daborak' ],
+            "Stalker's Eye" => [ 'type' => 'idk', 'parent' => 'the-rolling-wastes' ],
+            'Blackwheel' => [ 'type' => 'idk', 'parent' => 'the-rolling-wastes' ],
+            'Steelfield' => [ 'type' => 'idk', 'parent' => 'the-rolling-wastes' ],
+            'Thunderlands' => [ 'type' => 'idk', 'parent' => 'daborak' ],
+            'Ragehoof' => [ 'type' => 'idk', 'parent' => 'thunderlands' ],
+            'The Razor Cliffs' => [ 'type' => 'idk', 'parent' => 'daborak' ],
+            'Ramons Roost' => [ 'type' => 'idk', 'parent' => 'the-razoer-cliffs' ],
+            "Graver's Coast" => [ 'type' => 'idk', 'parent' => 'the-razoer-cliffs' ],
+            'Shadowfields' => [ 'type' => 'fields', 'parent' => 'daborak' ],
+            'Gaze Stone' => [ 'type' => 'idk', 'parent' => 'shadowfields' ],
+            'Dark Gate' => [ 'type' => 'idk', 'parent' => 'shadowfields' ],
+            'Bloodwave Bay' => [ 'type' => 'country', 'parent' => 'kalkatesh' ],
+            'The Freelands' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'The Wild Isles' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'Connatorga' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'Cliffs of Dane' => [ 'type' => 'idk', 'parent' => 'bloodwave-bay' ],
+            'The Badlands' => [ 'type' => 'idk', 'parent' => 'kalkatesh' ],
+            'Eyes of Sorrow' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'Nightlands' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'Rotten Would' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'The Culn' => [ 'type' => 'idk', 'parent' => 'the-badlands' ],
+            'Steton' => [ 'type' => 'idk', 'parent' => 'kalkatesh' ],
+            'Brutal Coast' => [ 'type' => 'coast', 'parent' => 'steton' ],
+            'Highriver' => [ 'type' => 'riverlands', 'parent' => 'steton' ],
+            "King's Crest" => [ 'type' => 'idk', 'parent' => 'steton' ],
+            'Windlance Valley' => [ 'type' => 'idk', 'parent' => 'steton' ],
+            'Maelstrom Mountains' => [ 'type' => 'mountains', 'parent' => 'steton' ],
+            'Dolten' => [ 'type' => 'mountains', 'parent' => 'kalkatesh' ],
+            'Abhorrent Arboreal' => [ 'type' => 'forest', 'parent' => 'dolten' ],
+            'Fanged Hills' => [ 'type' => 'hills', 'parent' => 'abhorrent-arboreal' ],
+            'Grasping Thicket' => [ 'type' => 'forest', 'parent' => 'abhorrent-arboreal' ],
+            'Gravewatch' => [ 'type' => 'idk', 'parent' => 'grasping-thicket' ],
+            'Bleak Reaches' => [ 'type' => 'idk', 'parent' => 'abhorrent-arboreal' ],
+            'Coin Copse' => [ 'type' => 'idk', 'parent' => 'abhorrent-arboreal' ],
+            'Howling Hills' => [ 'type' => 'hills', 'parent' => 'abhorrent-arboreal' ],
+            'Feywood' => [ 'type' => 'woods', 'parent' => 'abhorrent-arboreal' ],
+            'Douglasfall' => [ 'type' => 'idk', 'parent' => 'feywood' ],
+            'Webwood' => [ 'type' => 'woods', 'parent' => 'abhorrent-arboreal' ],
+            'Pale Fields' => [ 'type' => 'fields', 'parent' => 'abhorrent-arboreal' ],
+            'Daborak' => [ 'type' => 'mountains', 'parent' => 'kalkatesh' ],
+            'The Rolling Wastes' => [ 'type' => 'wasteland', 'parent' => 'daborak' ],
+            "Stalker's Eye" => [ 'type' => 'idk', 'parent' => 'the-rolling-wastes' ],
+            'Blackwheel' => [ 'type' => 'idk', 'parent' => 'the-rolling-wastes' ],
+            'Steelfield' => [ 'type' => 'idk', 'parent' => 'the-rolling-wastes' ],
+            'Thunderlands' => [ 'type' => 'idk', 'parent' => 'daborak' ],
+            'Ragehoof' => [ 'type' => 'idk', 'parent' => 'thunderlands' ],
+            'The Razor Cliffs' => [ 'type' => 'idk', 'parent' => 'daborak' ],
+            'Ramons Roost' => [ 'type' => 'idk', 'parent' => 'the-razoer-cliffs' ],
+            "Graver's Coast" => [ 'type' => 'idk', 'parent' => 'the-razoer-cliffs' ],
+            'Shadowfields' => [ 'type' => 'fields', 'parent' => 'daborak' ],
+            'Gaze Stone' => [ 'type' => 'idk', 'parent' => 'shadowfields' ],
+            'Dark Gate' => [ 'type' => 'idk', 'parent' => 'shadowfields' ],
+        ]);
+    }
 
-        // municipality types
-        $city = MunicipalityType::factory()->create([ 'name' => 'City' ]);
-        $town = MunicipalityType::factory()->create([ 'name' => 'Town' ]);
-        $village = MunicipalityType::factory()->create([ 'name' => 'Village' ]);
+    public function createTypes(array $types): void
+    {
+        collect($types)->each(function(string $name) {
+            $slug = Str::of($name)->slug();
+            $type = LocationType::factory()->create([ 'name' => $name ]);
+            Cache::put("seeders.location-types.$slug", $type);
+        });
+    }
 
-        // regions
-        $kalkatesh = $continent->regions()->save(Region::factory()->make([ 'name' => 'Kalkatesh' ]));
-        $steton = $country->regions()->save(Region::factory()->make([ 'name' => 'Steton' ]));
-        $dolten = $country->regions()->save(Region::factory()->make([ 'name' => 'Dolten' ]));
-        $krazax = $country->regions()->save(Region::factory()->make([ 'name' => 'Krazax' ]));
-        $bloodwaveBay = $country->regions()->save(Region::factory()->make([ 'name' => 'Bloodwave Bay' ]));
-        $badlands = $wasteland->regions()->save(Region::factory()->make([ 'name' => 'The Badlands' ]));
-        $daborak = $country->regions()->save(Region::factory()->make([ 'name' => 'Daborak' ]));
-        $thunderlands = $plains->regions()->save(Region::factory()->make([ 'name' => 'Thunderlands' ]));
-        $abhorrentAbboreal = $forest->regions()->save(Region::factory()->make([ 'name' => 'Abhorrent Abboreal' ]));
-        $fangedHills = $hills->regions()->save(Region::factory()->make([ 'name' => 'Fanged Hills' ]));
+    public function create(array $locations): void
+    {
+        collect($locations)->each(function(array $data, string $name) {
+            $slug = Str::of($name)->slug();
+            $type = Cache::get('seeders.location-types.' . $data['type']);
+            $location = Location::factory()->make([ 'name' => $name ]);
+            $location->type()->associate($type);
 
-        // municipalities
-        $gordand = $city->municipalities()->make([ 'name' => 'Gordand' ]);
+            if (Arr::exists($data, 'parent')) {
+                $parent = Cache::get('seeders.locations.' . $data['parent']);
+                $location->parent()->associate($parent);
+            }
 
-        // hierarchy
-        $verum->regions()->save($kalkatesh);
-        $kalkatesh->children()->saveMany([ $steton, $dolten, $badlands, $daborak, $krazax ]);
-        $daborak->children()->save($thunderlands);
-        $dolten->children()->save($abhorrentAbboreal);
-        $abhorrentAbboreal->children()->save($fangedHills);
-        $thunderlands->municipalities()->save($gordand);
-
-        // origins
-        $krazax->origins()->save(Origin::factory()->make([ 'name' => 'Lowlander' ]));
-        $krazax->origins()->save(Origin::factory()->make([ 'name' => 'Legionnaire' ]));
-        $krazax->origins()->save(Origin::factory()->make([ 'name' => 'Peakfolk' ]));
-        $dolten->origins()->save(Origin::factory()->make([ 'name' => 'Night Guard Aspirant' ]));
-        $dolten->origins()->save(Origin::factory()->make([ 'name' => 'Gravewatcher' ]));
-        $dolten->origins()->save(Origin::factory()->make([ 'name' => 'Ward of Witchtown' ]));
-        $bloodwaveBay->origins()->save(Origin::factory()->make([ 'name' => 'Mage Coast' ]));
-        $bloodwaveBay->origins()->save(Origin::factory()->make([ 'name' => 'Navigator' ]));
-        $bloodwaveBay->origins()->save(Origin::factory()->make([ 'name' => 'Spelunker' ]));
-        $steton->origins()->save(Origin::factory()->make([ 'name' => 'Brulette Slayer' ]));
-        $steton->origins()->save(Origin::factory()->make([ 'name' => 'Dragon Slayer' ]));
-        $steton->origins()->save(Origin::factory()->make([ 'name' => 'Floating Nomad' ]));
-        $daborak->origins()->save(Origin::factory()->make([ 'name' => 'River Runner' ]));
-        $daborak->origins()->save(Origin::factory()->make([ 'name' => 'Bandit of the Rolling Wastes' ]));
-        $daborak->origins()->save(Origin::factory()->make([ 'name' => 'Daborakian Noble' ]));
+            $location->save();
+            Cache::put("seeders.locations.$slug", $location);
+        });
     }
 }

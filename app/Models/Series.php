@@ -7,24 +7,22 @@ use App\Models\SeriesInstallment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Series extends Model
 {
     use HasFactory;
 
-    public function serializableMorphToMany(string $class): MorphToMany
+    protected $guarded = [
+        'id',
+    ];
+
+    public function campaigns(): BelongsToMany
     {
         return $this
-            ->morphedByMany($class, 'serializable', 'series_installments')
-            ->withPivot('index')
+            ->belongsToMany(Campaign::class, 'series_installments')
             ->using(SeriesInstallment::class)
             ->orderBy('series_installments.index');
-    }
-
-    public function campaigns(): MorphToMany
-    {
-        return $this->serializableMorphToMany(Campaign::class);
     }
 
     public function installments(): HasMany
@@ -32,15 +30,10 @@ class Series extends Model
         return $this->hasMany(SeriesInstallment::class);
     }
 
-    public function getInstallmentCountAttribute(): int
-    {
-        return is_null($this->installments) ? 0 : $this->installments->count();
-    }
-
-    public function reorderInstallments(?array $installments = null): Series
+    public function reorder($installments = null): void
     {
         if (is_null($installments)) {
-            $installments = $this->installments->pluck('id');
+            $installments = $this->campaigns;
         }
 
         foreach ($installments as $index => $installment) {
@@ -51,7 +44,5 @@ class Series extends Model
             $installment->index = $index;
             $installment->save();
         }
-
-        return $this;
     }
 }

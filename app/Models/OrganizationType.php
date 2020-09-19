@@ -10,8 +10,12 @@ class OrganizationType extends Model
 {
     use HasFactory;
 
-    public function group(): BelongsTo
+    protected $guarded = [
+        'id',
+    ];
+
+    public function organizations(): HasMany
     {
-        return $this->belongsTo(Organization::class);
+        return $this->hasMany(Organization::class, 'organization_category_id');
     }
 }

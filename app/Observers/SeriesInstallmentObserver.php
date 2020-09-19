@@ -6,13 +6,13 @@ use App\Models\SeriesInstallment;
 
 class SeriesInstallmentObserver
 {
-    public function creating(SeriesInstallment $installment)
+    public function creating(SeriesInstallment $installment): void
     {
-        $installment->index = $installment->series->installment_count;
+        $installment->index = $installment->series->installments()->count();
     }
 
-    public function deleted(SeriesInstallment $installment)
+    public function deleted(SeriesInstallment  $installment): void
     {
-        $installment->series->reorderInstallments();
+        $installment->series->reorder();
     }
 }

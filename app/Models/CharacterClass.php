@@ -10,6 +10,15 @@ class CharacterClass extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id',
+    ];
+
+    public function archetype(): BelongsTo
+    {
+        return $this->belongsTo(ClassArchetype::class, 'class_archetype_id');
+    }
+
     public function character(): BelongsTo
     {
         return $this->belongsTo(Character::class);
@@ -17,11 +26,6 @@ class CharacterClass extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(CharacterClassType::class, 'character_class_type_id');
-    }
-
-    public function archetype(): BelongsTo
-    {
-        return $this->belongsTo(CharacterClassArchetype::class);
+        return $this->belongsTo(ClassType::class, 'class_type_id');
     }
 }

@@ -4,43 +4,31 @@ namespace App\Providers;
 
 use App\Models\Campaign;
 use App\Models\CampaignSession;
-use App\Models\CharacterClassType;
-use App\Models\CharacterClassArchetype;
-use App\Models\Region;
+use App\Models\Character;
+use App\Models\ClassType;
+use App\Models\ClassArchetype;
+use App\Models\Location;
+use App\Models\Organization;
 use App\Models\SeriesInstallment;
-use App\Observers\CampaignSessionObserver;
 use App\Observers\SeriesInstallmentObserver;
-use App\Observers\RegionObserver;
+use App\Observers\CampaignSessionObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
     public function boot()
     {
         Relation::morphMap([
             'campaign' => Campaign::class,
-            'character_class_type' => CharacterClassType::class,
-            'character_class_archetype' => CharacterClassArchetype::class,
+            'character' => Character::class,
+            'class-type' => ClassType::class,
+            'class-archetype' => ClassArchetype::class,
+            'location' => Location::class,
+            'organization' => Organization::class,
         ]);
 
         CampaignSession::observe(CampaignSessionObserver::class);
         SeriesInstallment::observe(SeriesInstallmentObserver::class);
-        Region::observe(RegionObserver::class);
     }
 }

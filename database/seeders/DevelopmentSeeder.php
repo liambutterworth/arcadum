@@ -10,12 +10,20 @@ class DevelopmentSeeder extends Seeder
     {
         $this->call([
             AlignmentSeeder::class,
-            PantheonSeeder::class,
+            DeitySeeder::class,
+            LocationSeeder::class,
             RaceSeeder::class,
             FeatSeeder::class,
-            LocationSeeder::class,
+            ProficiencySeeder::class,
+            OrganizationSeeder::class,
+            BackgroundSeeder::class,
+            SpellSeeder::class,
             ClassSeeder::class,
+            UserSeeder::class,
+            CharacterSeeder::class,
             CampaignSeeder::class,
+            SeriesSeeder::class,
+            PropertySeeder::class,
         ]);
     }
 }

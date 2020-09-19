@@ -6,7 +6,7 @@ use App\Models\Alignment;
 use App\Models\Character;
 use App\Models\CharacterClass;
 use App\Models\Deity;
-use App\Models\Origin;
+use App\Models\Background;
 use App\Models\Race;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -14,17 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class CharacterFactory extends Factory
 {
     protected $model = Character::class;
-
-    public function configure()
-    {
-        return $this->afterMaking(function(Character $character) {
-            if (!$character->user) $character->user()->associate(User::inRandomOrder()->first());
-            if (!$character->race) $character->race()->associate(Race::inRandomOrder()->first());
-            if (!$character->origin) $character->origin()->associate(Origin::inRandomOrder()->first());
-            if (!$character->deity) $character->deity()->associate(Deity::inRandomOrder()->first());
-            if (!$character->alignment) $character->alignment()->associate(Alignment::inRandomOrder()->first());
-        });
-    }
 
     public function definition()
     {

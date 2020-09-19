@@ -2,20 +2,38 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OwnsProperties;
+use App\Models\Concerns\RulesLocations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Support\Collection;
 
 class Character extends Model
 {
-    use HasFactory;
+    use HasFactory, OwnsProperties, RulesLocations;
 
-    public function stats(): HasOne
+    protected $guarded = [
+        'id',
+    ];
+
+    public function alignment(): BelongsTo
     {
-        return $this->hasOne(CharacterStats::class);
+        return $this->belongsTo(Alignment::class);
+    }
+
+    public function background(): BelongsTo
+    {
+        return $this->belongsTo(Background::class);
+    }
+
+    public function campaigns(): BelongsToMany
+    {
+        return $this->belongsToMany(Campaign::class)->using(CampaignMember::class);
     }
 
     public function classes(): HasMany
@@ -23,9 +41,29 @@ class Character extends Model
         return $this->hasMany(CharacterClass::class);
     }
 
-    public function user(): BelongsTo
+    public function deity(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Deity::class);
+    }
+
+    public function features(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassFeature::class);
+    }
+
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class)->using(OrganizationMember::class);
+    }
+
+    public function origin(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function proficiences(): BelongsToMany
+    {
+        return $this->belongsToMany(Proficiency::class);
     }
 
     public function race(): BelongsTo
@@ -33,35 +71,33 @@ class Character extends Model
         return $this->belongsTo(Race::class);
     }
 
-    public function origin(): BelongsTo
+    public function spells(): BelongsToMany
     {
-        return $this->belongsTo(Origin::class);
+        return $this->belongsToMany(Spell::class);
     }
 
-    public function deity(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Deity::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function alignment(): BelongsTo
+    public function getAvailableFeats(): Collection
     {
-        return $this->belongsTo(Alignment::class);
+        //
     }
 
-    public function parties(): BelongsToMany
+    public function getAvailableClassFeatures(): Collection
     {
-        return $this->belongsToMany(Party::class, 'party_members')->using(PartyMember::class);
-    }
+        $features = new Collect();
 
-    public function getAvailableFeats()
-    {
-        return Feat::getAvailableFor($this);
-    }
+        $this->character->classes->each(function($class) use(&$features) {
+            $features->concat($class->type->features()->where('level_requirement', '<=', $class->level)->get());
 
-    public function getAvailableClassees()
-    {
-        return CharacterClassType::all()->filter(function($type) {
-            // $type->
+            if ($class->archetype) {
+                $features->concat($class->archetype->features()->where('level_requirement', '<=', $class->level)->get());
+            }
         });
+
+        return $features;
     }
 }

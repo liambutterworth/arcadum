@@ -10,7 +10,7 @@ class CreateDeitiesTable extends Migration
     {
         Schema::create('deities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pantheon_id')->constrained()->onDelete('cascade');
+            $table->foreignId('deity_pantheon_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->timestamps();
         });

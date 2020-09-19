@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateFeatRaceTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('feat_race', function (Blueprint $table) {
@@ -20,11 +15,6 @@ class CreateFeatRaceTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('feat_race');

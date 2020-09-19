@@ -8,11 +8,11 @@ class CampaignSessionObserver
 {
     public function creating(CampaignSession $session)
     {
-        $session->index = $session->campaign->session_count;
+        $session->index = $session->campaign->sessions()->count();
     }
 
     public function deleted(CampaignSession $session)
     {
-        $session->campaign->reorderSessions();
+        $session->campaign->reorder();
     }
 }

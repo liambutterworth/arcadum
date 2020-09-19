@@ -10,6 +10,10 @@ class CampaignSession extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id',
+    ];
+
     public function campaign(): BelongsTo
     {
         return $this->belongsTo(Campaign::class);

@@ -6,26 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateFeatsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('feats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('required_stats')->nullable();
+            $table->string('required_abilities')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('feats');

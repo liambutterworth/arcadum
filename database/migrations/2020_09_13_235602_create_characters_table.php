@@ -10,10 +10,11 @@ class CreateCharactersTable extends Migration
     {
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('alignment_id')->constrained();
-            $table->foreignId('deity_id')->constrained();
-            $table->foreignId('origin_id')->constrained();
-            $table->foreignId('race_id')->constrained();
+            $table->foreignId('alignment_id')->nullable()->constrained();
+            $table->foreignId('background_id')->nullable()->constrained();
+            $table->foreignId('deity_id')->nullable()->constrained();
+            $table->foreignId('origin_id')->nullable()->constrained('locations');
+            $table->foreignId('race_id')->nullable()->constrained();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->integer('strength');

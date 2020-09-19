@@ -2,44 +2,36 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasSeries;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Campaign extends Model
 {
-    use HasFactory, HasSeries;
+    use HasFactory;
 
-    public function party(): HasOne
+    protected $guarded = [
+        'id',
+    ];
+
+    public function characters(): BelongsToMany
     {
-        return $this->hasOne(Party::class);
+        return $this->belongsToMany(Character::class);
     }
 
-    public function members(): HasManyThrough
+    public function series(): BelongsToMany
     {
-        return $this->hasManyThrough(PartyMember::class, Party::class);
+        return $this->belongsToMany(Series::class, 'series_installments')->using(SeriesInstallment::class);
     }
 
     public function sessions(): HasMany
     {
-        return $this->hasMany(CampaignSession::class)->orderBy('campaign_sessions.index');
+        return $this->hasMany(CampaignSession::class);
     }
 
-    public function getPartyAttribute(): Party
-    {
-        return Party::firstOrCreate([ 'campaign_id' => $this->id ]);
-    }
-
-    public function getSessionCountAttribute(): int
-    {
-        return is_null($this->sessions) ? 0 : $this->sessions->count();
-    }
-
-    public function reorderSessions(?array $sessions = null): void
+    public function reorder($sessions = null): void
     {
         if (is_null($sessions)) {
             $sessions = $this->sessions;

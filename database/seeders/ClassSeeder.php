@@ -2,62 +2,95 @@
 
 namespace Database\Seeders;
 
-use App\Models\CharacterClass;
-use App\Models\CharacterClassArchetype;
-use App\Models\CharacterClassType;
-use App\Models\Feature;
-use App\Models\Level;
+use App\Models\ClassArchetype;
+use App\Models\ClassFeature;
+use App\Models\ClassLevel;
+use App\Models\ClassType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ClassSeeder extends Seeder
 {
     public function run()
     {
-        // class types
-        $barbarian = CharacterClassType::factory()->create([ 'name' => 'Barbarian' ]);
-        $bard = CharacterClassType::factory()->create([ 'name' => 'Bard' ]);
-        $cleric = CharacterClassType::factory()->create([ 'name' => 'Cleric' ]);
-        $druid = CharacterClassType::factory()->create([ 'name' => 'Druid' ]);
-        $figher = CharacterClassType::factory()->create([ 'name' => 'Figher' ]);
-        $monk = CharacterClassType::factory()->create([ 'name' => 'Monk' ]);
-        $paladin = CharacterClassType::factory()->create([ 'name' => 'Paladin' ]);
-        $ranger = CharacterClassType::factory()->create([ 'name' => 'Ranger' ]);
-        $rogue = CharacterClassType::factory()->create([ 'name' => 'Rogue' ]);
-        $sorcerer = CharacterClassType::factory()->create([ 'name' => 'Sorcerer' ]);
-        $warlock = CharacterClassType::factory()->create([ 'name' => 'Warlock' ]);
-        $wizard = CharacterClassType::factory()->create([ 'name' => 'Wizard' ]);
+        $this->createTypes([
+            'Barbarian' => [
+                'features' => [
+                    'Rage' => [ 'level_requirement' => 1 ],
+                    'Unarmored Defense' => [ 'level_requirement' => 1 ],
+                ],
 
-        // class type levels
-        $barbarian->levels()->save(Level::factory()->make([ 'level' => 1, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
-        $barbarian->levels()->save(Level::factory()->make([ 'level' => 2, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
-        $barbarian->levels()->save(Level::factory()->make([ 'level' => 3, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
-        $barbarian->levels()->save(Level::factory()->make([ 'level' => 4, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ]));
-        $barbarian->levels()->save(Level::factory()->make([ 'level' => 5, 'proficiency_bonus' => 3, 'rages' => 3, 'rage_damage' => 2 ]));
+                'levels' => [
+                    [ 'level' => 1, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ],
+                    [ 'level' => 2, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ],
+                    [ 'level' => 3, 'proficiency_bonus' => 2, 'rages' => 3, 'rage_damage' => 2 ],
+                ],
+            ],
 
-        // class archetypes
-        $ancestralGuardian = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Ancestral Guardian' ]));
-        $battleRanger = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Battleranger' ]));
-        $berserker = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Berserker' ]));
-        $stormHerald = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Storm Herald' ]));
-        $totemWarrior = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Totem Warrior' ]));
-        $zealot = $barbarian->archetypes()->save(CharacterClassArchetype::factory()->make([ 'name' => 'Zealot' ]));
+            // 'Bard',
+            // 'Cleric',
+            // 'Druid',
+            // 'Fighter',
+            // 'Monk',
+            // 'Paladin',
+            // 'Ranger',
+            // 'Rogue',
+            // 'Sorcerer',
+            // 'Warlock',
+            // 'Wizard',
+        ]);
 
-        // class archetype levels
-        $berserker->levels()->save(Level::factory()->make([ 'level' => 3 ]));
-        $berserker->levels()->save(Level::factory()->make([ 'level' => 6 ]));
+        $this->createArchetypes([
+            'Berserker' => [
+                'type' => 'barbarian',
 
-        // class features
-        $recklessAttack = Feature::factory()->create([ 'name' => 'Reckless Attack' ]);
-        $extraAttack = Feature::factory()->create([ 'name' => 'Extra Attack' ]);
-        $fastMovement = Feature::factory()->create([ 'name' => 'Fast Movement' ]);
-        $frenzy = Feature::factory()->create([ 'name' => 'Frenzy' ]);
-        $mindlessRage = Feature::factory()->create([ 'name' => 'Mindless Rage' ]);
+                'features' => [
+                    'Frenzy' => [ 'level_requirement' => 3 ],
+                ],
+            ],
+        ]);
+    }
 
-        // level features
-        $barbarian->level(2)->features()->save($recklessAttack);
-        $barbarian->level(5)->features()->save($extraAttack);
-        $barbarian->level(5)->features()->save($fastMovement);
-        $berserker->level(3)->features()->save($frenzy);
-        $berserker->level(6)->features()->save($mindlessRage);
+    public function createTypes(array $types): void
+    {
+        collect($types)->each(function(array $data, string $name) {
+            $slug = Str::of($name)->slug();
+            $type = ClassType::factory()->create([ 'name' => $name ]);
+            $this->createFeatures($type, $data['features']);
+            $this->createLevels($type, $data['levels']);
+            Cache::put("seeders.class-types.$slug", $type);
+        });
+    }
+
+    public function createArchetypes(array $archetypes): void
+    {
+        collect($archetypes)->each(function(array $data, string $name) {
+            $slug = Str::of($name)->slug();
+            $type = Cache::get('seeders.class-types.' . $data['type']);
+            $archetype = ClassArchetype::factory()->make([ 'name' => $name ]);
+            $archetype->type()->associate($type);
+            $archetype->save();
+            $this->createFeatures($archetype, $data['features']);
+            Cache::put("seeders.class-archetypes.$slug", $archetype);
+        });
+    }
+
+    public function createFeatures($type, array $features)
+    {
+        collect($features)->each(function(array $data, string $name) use($type) {
+            $slug = Str::of($name)->slug();
+            $feature = ClassFeature::factory()->make($data);
+            $type->features()->save($feature);
+            Cache::put("seeders.class-features.$slug", $feature);
+        });
+    }
+
+    public function createLevels($type, array $levels): void
+    {
+        collect($levels)->each(function(array $data) use($type) {
+            $level = ClassLevel::factory()->make($data);
+            $type->levels()->save($level);
+        });
     }
 }

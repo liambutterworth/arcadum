@@ -11,6 +11,8 @@ class CreateSpellsTable extends Migration
         Schema::create('spells', function (Blueprint $table) {
             $table->id();
             $table->foreignId('spell_school_id')->constrained();
+            $table->foreignId('spell_type_id')->constrained();
+            $table->string('name');
             $table->timestamps();
         });
     }

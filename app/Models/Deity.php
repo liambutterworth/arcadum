@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\Character;
-use App\Models\Pantheon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Deity extends Model
 {
     use HasFactory;
 
-    public function pantheon(): HasOne
+    protected $guarded = [
+        'id',
+    ];
+
+    public function pantheon(): BelongsTo
     {
-        return $this->hasOne(Pantheon::class);
+        return $this->belongsTo(DeityPantheon::class, 'deity_pantheon_id');
     }
 
     public function characters(): HasMany

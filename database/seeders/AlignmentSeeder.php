@@ -4,19 +4,32 @@ namespace Database\Seeders;
 
 use App\Models\Alignment;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class AlignmentSeeder extends Seeder
 {
     public function run()
     {
-        Alignment::factory()->create([ 'name' => 'Lawful Good' ]);
-        Alignment::factory()->create([ 'name' => 'Neutral Good' ]);
-        Alignment::factory()->create([ 'name' => 'Chaotic Good' ]);
-        Alignment::factory()->create([ 'name' => 'Lawful Neutral' ]);
-        Alignment::factory()->create([ 'name' => 'Neutral' ]);
-        Alignment::factory()->create([ 'name' => 'Chaotic Neutral' ]);
-        Alignment::factory()->create([ 'name' => 'Lawful Evil' ]);
-        Alignment::factory()->create([ 'name' => 'Neutral Evil' ]);
-        Alignment::factory()->create([ 'name' => 'Chaotic Evil' ]);
+        $this->create([
+            'Lawful Good',
+            'Neutral Good',
+            'Chaotic Good',
+            'Lawful Neutral',
+            'Neutral',
+            'Chaotic Neutral',
+            'Lawful Evil',
+            'Neutral Evil',
+            'Chaotic Evil',
+        ]);
+    }
+
+    public function create(array $names): void
+    {
+        collect($names)->each(function(string $name) {
+            $slug = Str::of($name)->slug();
+            $alignment = Alignment::factory()->create([ 'name' => $name ]);
+            Cache::put("seeders.alignments.$slug", $alignment);
+        });
     }
 }

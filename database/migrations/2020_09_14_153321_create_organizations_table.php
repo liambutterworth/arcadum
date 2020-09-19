@@ -10,10 +10,8 @@ class CreateOrganizationsTable extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('category_id')->unsigned();
-            $table->foreign('category_id')->references('id')->on('organization_categories');
-            $table->bigInteger('type_id')->unsigned();
-            $table->foreign('type_id')->references('id')->on('organization_types');
+            $table->foreignId('organization_category_id')->constrained();
+            $table->foreignId('organization_type_id')->constrained();
             $table->string('name');
             $table->timestamps();
         });

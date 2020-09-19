@@ -2,23 +2,35 @@
 
 namespace Database\Seeders;
 
-use App\Models\Race;
 use App\Models\Feat;
-use App\Models\Requirement;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class FeatSeeder extends Seeder
 {
     public function run()
     {
-        // feats
-        $grappler = Feat::factory()->create([ 'name' => 'Grappler', 'required_stats' => 'strength>13' ]);
+        $this->create([
+            'Grappler' => [ 'race' => 'human', 'required_abilities' => 'strength>13' ],
+            'Dragonmark of Making' => [ 'race' => 'elf' ],
+        ]);
+    }
 
-        // human feats
-        $human = Race::where('name', 'Human')->first();
-        $elf = Race::where('name', 'Elf')->first();
-        $dragonmarkOfMaking = Feat::factory()->make([ 'name' => 'Dragonmark of Making' ]);
-        $human->feats()->save($dragonmarkOfMaking);
-        $elf->feats()->save($dragonmarkOfMaking);
+    public function create(array $feats): void
+    {
+        collect($feats)->each(function(array $data, string $name) {
+            $slug = Str::of($name)->slug();
+            $stats = Arr::exists($data, 'required_abilities') ? $data['required_abilities'] : null;
+            $feat = Feat::factory()->create([ 'name' => $name, 'required_abilities' => $stats ]);
+
+            if (Arr::exists($data, 'race')) {
+                $race = Cache::get('seeders.races.' . $data['race']);
+                $feat->races()->save($race);
+            }
+
+            Cache::put("seeders.feats.$slug", $race);
+        });
     }
 }
