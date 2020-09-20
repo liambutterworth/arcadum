@@ -3,32 +3,42 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Campaign;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
-        return Campaign::all();
+        return response()->success(Campaign::all());
     }
 
-    public function show(Campaign $campaign)
+    public function show(int $id): JsonResponse
     {
-        return $campaign;
+        return response()->success(Campaign::find($id));
     }
 
-    public function store(Request $request)
+    public function store(): JsonResponse
     {
-        Campaign::create($request->all());
+        Campaign::create(request()->all());
+        return response()->success();
     }
 
-    public function update(Request $request, Campaign $campaign)
+    public function update(int $id): JsonResponse
     {
-        $campaign->save($request->all());
+        $campaign = Campaign::find($id);
+        $request = request();
+
+        if ($request->has('sessions')) {
+            $campaign->reorder($request->get('sessions'));
+        }
+
+        $campaign->save($request->except('sessions'));
+        return response()->success();
     }
 
-    public function delete(Request $request, Campaign $campaign)
+    public function destroy(int $id): JsonResponse
     {
-        $campaign->delete();
+        Campaign::destroy($id);
+        return response()->success();
     }
 }

@@ -2,43 +2,36 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Series;
+use App\Models\Location;
 use Illuminate\Http\JsonResponse;
 
-class SeriesController extends Controller
+class LocationController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->success(Series::all());
+        return response()->success(Location::all());
     }
 
     public function show(int $id): JsonResponse
     {
-        return response()->success(Series::find($id));
+        return response()->success(Location::find($id));
     }
 
     public function store(): JsonResponse
     {
-        Series::create(request()->all());
+        Location::create(request()->all());
         return response()->success();
     }
 
     public function update(int $id): JsonResponse
     {
-        $series = Series::find($id);
-        $request = request();
-
-        if ($request->has('installments')) {
-            $series->reorder($request->get('installments'));
-        }
-
-        $series->save($request->except('installments'));
+        Location::find($id)->save(request()->all());
         return response()->success();
     }
 
     public function destroy(int $id): JsonResponse
     {
-        Series::destroy($id);
+        Location::destroy($id);
         return response()->success();
     }
 }

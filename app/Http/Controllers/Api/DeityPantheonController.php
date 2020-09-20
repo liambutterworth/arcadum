@@ -2,43 +2,36 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Series;
+use App\Models\DeityPantheon;
 use Illuminate\Http\JsonResponse;
 
-class SeriesController extends Controller
+class DeityPantheonController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->success(Series::all());
+        return response()->success(DeityPantheon::all());
     }
 
     public function show(int $id): JsonResponse
     {
-        return response()->success(Series::find($id));
+        return response()->success(DeityPantheon::find($id));
     }
 
     public function store(): JsonResponse
     {
-        Series::create(request()->all());
+        DeityPantheon::create(request()->all());
         return response()->success();
     }
 
     public function update(int $id): JsonResponse
     {
-        $series = Series::find($id);
-        $request = request();
-
-        if ($request->has('installments')) {
-            $series->reorder($request->get('installments'));
-        }
-
-        $series->save($request->except('installments'));
+        DeityPantheon::find($id)->save(request()->all());
         return response()->success();
     }
 
     public function destroy(int $id): JsonResponse
     {
-        Series::destroy($id);
+        DeityPantheon::destroy($id);
         return response()->success();
     }
 }

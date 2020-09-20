@@ -2,35 +2,37 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Campaign;
 use App\Models\CampaignSession;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Http\JsonResponse;
 
 class CampaignSessionController extends Controller
 {
-    public function index(int $campaign): Collection
+    public function index(int $campaignId): JsonResponse
     {
-        return Campaign::with('sessions')->find($campaign)->sessions;
+        $sessions = Campaign::with('sessions')->find($campaignId)->sessions;
+        return response()->success($sessions);
     }
 
-    public function show(int $campaign, int $session): CampaignSession
+    public function show(int $campaignId, int $sessiionId): JsonResponse
     {
-        return CampaignSession::find($session);
+        return response()->success(CampaignSession::find($session));
     }
 
-    public function store(Request $request): void
+    public function store(): JsonResponse
     {
-        CampaignSession::create($request->all());
+        CampaignSession::create(request()->all());
+        return response()->success();
     }
 
-    public function update(int $campaign, int $session, Request $request): void
+    public function update(int $campaignId, int $sessionId): JsonResponse
     {
-        CampaignSession::find($session)->save($request->all());
+        CampaignSession::find($sessionId)->save(request()->all());
+        return response()->success();
     }
 
-    public function destroy(int $campaign, int $session): void
+    public function destroy(int $campaignId, int $sessionId): JsonResponse
     {
-        CampaignSession::destroy($session);
+        CampaignSession::destroy($sessionId);
+        return response()->success();
     }
 }

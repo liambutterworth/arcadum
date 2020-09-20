@@ -1,36 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Series;
 use App\Models\SeriesInstallment;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class SeriesInstallmentController extends Controller
 {
-    public function index(Series $series)
+    public function index(int $seriesId): JsonResponse
     {
-        return $series->installments;
+        $installments = Series::with('installments')->find($seriesId)->installments;
+        return response()->success($installments);
     }
 
-    public function show(SeriesInstallment $series)
+    public function store(): JsonResponse
     {
-        return $series->with('campaigns');
+        SeriesInstallment::create(request()->all());
+        return response()->success();
     }
 
-    public function store(Request $request)
+    public function update(int $seriesId, int $installmentId): JsonResponse
     {
-        Series::create($request->all());
+        SeriesInstallment::find($installmentId)->save(request()->all());
+        return response()->success();
     }
 
-    public function update(Request $request, Series $series)
+    public function destroy(int $seriesId, int $installmentId): JsonResponse
     {
-        $series->save($request->all());
-    }
-
-    public function delete(Series $series, SeriesInstallment $installment)
-    {
-        $installment->delete();
-        $series->reorder();
+        SeriesInstallment::destroy($installmentId);
+        return response()->success();
     }
 }

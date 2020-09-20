@@ -10,8 +10,8 @@ class CreateSeriesInstallmentsTable extends Migration
     {
         Schema::create('series_installments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('campaign_id')->constrained();
-            $table->foreignId('series_id')->constrained();
+            $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
+            $table->foreignId('series_id')->constrained()->onDelete('cascade');
             $table->integer('index');
         });
     }
