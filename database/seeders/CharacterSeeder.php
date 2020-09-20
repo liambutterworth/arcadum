@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Alignment;
-use App\Models\Background;
+use App\Models\Origin;
 use App\Models\Character;
 use App\Models\CharacterClass;
 use App\Models\CharacterClassArchetype;
@@ -76,30 +76,29 @@ class CharacterSeeder extends Seeder
             $character = Character::factory()->make([ 'name' => $name ]);
             $user = Cache::get('seeders.users.' . $data['user']);
 
-            // dump($data['user'] . " ---------- $slug");
             $alignment = Arr::exists($data, 'alignment')
-                ? Cache::get('seeders.background.' . $data['background'])
-                : Background::inRandomOrder()->first();
-
-            $background = Arr::exists($data, 'background')
-                ? Cache::get('seeders.background.' . $data['background'])
-                : Background::inRandomOrder()->first();
+                ? Cache::get('seeders.alignments.' . $data['alignment'])
+                : Alignment::inRandomOrder()->first();
 
             $deity = Arr::exists($data, 'deity')
                 ? Cache::get('seeders.deities.' . $data['deity'])
                 : Deity::inRandomOrder()->first();
 
+            $location = Arr::exists($data, 'location')
+                ? Cache::get('seeders.locations.' . $data['location'])
+                : Location::inRandomOrder()->first();
+
+            $origin = Arr::exists($data, 'origin')
+                ? Cache::get('seeders.origins.' . $data['origin'])
+                : Origin::inRandomOrder()->first();
+
             $race = Arr::exists($data, 'race')
                 ? Cache::get('seeders.races.' . $data['race'])
                 : Race::inRandomOrder()->first();
 
-            $origin = Arr::exists($data, 'origin')
-                ? Cache::get('seeders.locations.' . $data['origin'])
-                : Location::inRandomOrder()->first();
-
             $character->alignment()->associate($alignment);
-            $character->background()->associate($background);
             $character->deity()->associate($deity);
+            $character->home()->associate($origin);
             $character->origin()->associate($origin);
             $character->race()->associate($race);
             $character->user()->associate($user);

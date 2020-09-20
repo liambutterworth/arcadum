@@ -3,24 +3,17 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToSelf;
-use App\Models\Concerns\HasBackgrounds;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Location extends Model
 {
-    use BelongsToSelf, HasBackgrounds, HasFactory;
+    use BelongsToSelf, HasFactory;
 
-    protected $guarded = [
-        'id',
-    ];
-
-    public function ruler(): MorphTo
-    {
-        return $this->morphTo();
-    }
+    protected $guarded = ['id'];
 
     public function capital(): HasOne
     {
@@ -30,6 +23,16 @@ class Location extends Model
     public function capitalOf(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'capital_id');
+    }
+
+    public function origins(): BelongsToMany
+    {
+        return $this->belongsToMany(Origin::class);
+    }
+
+    public function ruler(): MorphTo
+    {
+        return $this->morphTo();
     }
 
     public function type(): BelongsTo

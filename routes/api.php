@@ -3,31 +3,46 @@
 use Illuminate\Support\Facades\Route;
 
 Route::namespace('App\Http\Controllers\Api')->group(function() {
-    Route::resource('campaigns', 'AlignmentController');
-    Route::resource('campaigns', 'BackgroundController');
+    Route::resource('alignments', 'AlignmentController');
+    Route::resource('backgrounds', 'BackgroundController');
     Route::resource('campaigns', 'CampaignController');
-    Route::resource('campaigns', 'CampaignSessionController');
-    Route::resource('campaigns', 'CharacterController');
-    Route::resource('campaigns', 'ClassArchetypeController');
-    Route::resource('campaigns', 'ClassFeatureController');
-    Route::resource('campaigns', 'ClassLevelController');
-    Route::resource('campaigns', 'ClassTypeController');
-    Route::resource('campaigns', 'DeityController');
-    Route::resource('campaigns', 'DeityPantheonController');
-    Route::resource('campaigns', 'FeatController');
-    Route::resource('campaigns', 'LocationController');
-    Route::resource('campaigns', 'LocationTypeController');
-    Route::resource('campaigns', 'OrganizationController');
-    Route::resource('campaigns', 'OrganizationCategoryController');
-    Route::resource('campaigns', 'OrganizationTypeController');
-    Route::resource('campaigns', 'ProficiencyController');
-    Route::resource('campaigns', 'ProficiencyTypeController');
-    Route::resource('campaigns', 'PropertyController');
-    Route::resource('campaigns', 'RaceController');
-    Route::resource('campaigns', 'SeriesController');
-    Route::resource('campaigns', 'SeriesInstallmentController');
-    Route::resource('campaigns', 'SpellController');
-    Route::resource('campaigns', 'SpellSchoolController');
-    Route::resource('campaigns', 'SpellTypeController');
-    Route::resource('campaigns', 'UserController');
+    Route::resource('campaigns.sessions', 'CampaignSessionController');
+    Route::resource('characters', 'CharacterController');
+    Route::resource('deities', 'DeityController');
+    Route::resource('pantheons', 'PantheonController');
+    Route::resource('feats', 'FeatController');
+    Route::resource('locations', 'LocationController');
+    Route::resource('organizations', 'OrganizationController');
+    Route::resource('proficiencies', 'ProficiencyController');
+    Route::resource('properties', 'PropertyController');
+    Route::resource('races', 'RaceController');
+    Route::resource('series', 'SeriesController');
+    Route::resource('series.installment', 'SeriesInstallmentController');
+    Route::resource('spells', 'SpellController');
+    Route::resource('users', 'UserController');
+
+    Route::prefix('class')->group(function() {
+        Route::resource('archetypes', 'ClassArchetypeController');
+        Route::resource('features', 'ClassFeatureController');
+        Route::resource('levels', 'ClassLevelController');
+        Route::resource('types', 'ClassTypeController');
+    });
+
+    Route::prefix('location')->group(function() {
+        Route::resource('types', 'LocationTypeController');
+    });
+
+    Route::prefix('organization')->group(function() {
+        Route::resource('categories', 'OrganizationCategoryController');
+        Route::resource('types', 'OrganizationTypeController');
+    });
+
+    Route::prefix('proficiency')->group(function() {
+        Route::resource('types', 'ProficiencyTypeController');
+    });
+
+    Route::prefix('spell')->group(function() {
+        Route::resource('schools', 'SpellSchoolController');
+        Route::resource('types', 'SpellTypeController');
+    });
 });

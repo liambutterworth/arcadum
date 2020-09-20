@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Background;
+use App\Models\Origin;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
-class BackgroundSeeder extends Seeder
+class OriginSeeder extends Seeder
 {
     public function run()
     {
@@ -18,26 +18,26 @@ class BackgroundSeeder extends Seeder
         ]);
     }
 
-    public function create(array $backgrounds): void
+    public function create(array $origins): void
     {
-        collect($backgrounds)->each(function(array $data, string $name) {
+        collect($origins)->each(function(array $data, string $name) {
             $slug = Str::of($name)->slug();
-            $background = Background::factory()->create([ 'name' => $name ]);
+            $origin = Origin::factory()->create([ 'name' => $name ]);
 
             if (Arr::exists($data, 'proficiencies')) {
                 $proficiencies = collect($data['proficiencies'])->map(function($slug) {
                     return Cache::get("seeders.proficiencies.$slug");
                 });
 
-                $background->proficiencies()->saveMany($proficiencies);
+                $origin->proficiencies()->saveMany($proficiencies);
             }
 
             if (Arr::exists($data, 'location')) {
                 $location = Cache::get('seeders.locations.' . $data['location']);
-                $location->backgrounds()->save($background);
+                $location->origins()->save($origin);
             }
 
-            Cache::put("seeders.backgrounds.$slug", $background);
+            Cache::put("seeders.origins.$slug", $origin);
         });
     }
 }

@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // boot morph names
+        // morph names
         Relation::morphMap([
             'campaign' => Campaign::class,
             'character' => Character::class,
@@ -31,11 +31,11 @@ class AppServiceProvider extends ServiceProvider
             'organization' => Organization::class,
         ]);
 
-        // boot servers
+        // observers
         CampaignSession::observe(CampaignSessionObserver::class);
         SeriesInstallment::observe(SeriesInstallmentObserver::class);
 
-        // boot macros
+        // macros
         Response::mixin(new ResponseMacros());
     }
 }

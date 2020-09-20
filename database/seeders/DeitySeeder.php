@@ -12,15 +12,6 @@ class DeitySeeder extends Seeder
 {
     public function run()
     {
-        $this->createPantheons([
-            'White Pantheon',
-            'Grey Pantheon',
-            'Midguard Pantheon',
-            'Green Pantheon',
-            'Blue Pantheon',
-            'Black Pantheon',
-        ]);
-
         $this->create([
             'Viderick' => [ 'pantheon' => 'white-pantheon' ],
             'Vavren' => [ 'pantheon' => 'white-pantheon' ],
@@ -56,20 +47,11 @@ class DeitySeeder extends Seeder
         ]);
     }
 
-    public function createPantheons(array $pantheons): void
-    {
-        collect($pantheons)->each(function($name) {
-            $slug = Str::of($name)->slug();
-            $pantheon = DeityPantheon::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.deity-pantheons.$slug", $pantheon);
-        });
-    }
-
     public function create(array $deities): void
     {
         collect($deities)->each(function(array $data, string $name) {
             $slug = Str::of($name)->slug();
-            $pantheon = Cache::get('seeders.deity-pantheons.' . $data['pantheon']);
+            $pantheon = Cache::get('seeders.pantheons.' . $data['pantheon']);
             $deity = Deity::factory()->make([ 'name' => $name ]);
             $deity->pantheon()->associate($pantheon);
             $deity->save();

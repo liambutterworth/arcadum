@@ -4,13 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBackgroundsTable extends Migration
+class CreateOriginsTable extends Migration
 {
     public function up()
     {
-        Schema::create('backgrounds', function (Blueprint $table) {
+        Schema::create('origins', function (Blueprint $table) {
             $table->id();
-            $table->nullableMorphs('backgroundable');
+            $table->foreignId('parent_id')->nullable()->constrained('origins');
             $table->string('name');
             $table->timestamps();
         });
@@ -18,6 +18,6 @@ class CreateBackgroundsTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('backgrounds');
+        Schema::dropIfExists('origins');
     }
 }

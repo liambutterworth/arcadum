@@ -11,13 +11,16 @@ class Feat extends Model
 {
     use HasFactory, HasRequiredAbilities;
 
-    protected $guarded = [
-        'id',
-    ];
+    protected $guarded = ['id'];
 
     public function races(): BelongsToMany
     {
         return $this->belongsToMany(Race::class);
+    }
+
+    public function origins(): BelongsToMany
+    {
+        return $this->belongsToMany(Origin::class);
     }
 
     public static function availableFor(Character $character)

@@ -17,7 +17,7 @@ class Deity extends Model
 
     public function pantheon(): BelongsTo
     {
-        return $this->belongsTo(DeityPantheon::class, 'deity_pantheon_id');
+        return $this->belongsTo(Pantheon::class);
     }
 
     public function characters(): HasMany

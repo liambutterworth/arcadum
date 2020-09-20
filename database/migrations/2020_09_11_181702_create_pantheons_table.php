@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeityPantheonsTable extends Migration
+class CreatePantheonsTable extends Migration
 {
     public function up()
     {
-        Schema::create('deity_pantheons', function (Blueprint $table) {
+        Schema::create('pantheons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -17,6 +17,6 @@ class CreateDeityPantheonsTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('deity_pantheons');
+        Schema::dropIfExists('pantheons');
     }
 }

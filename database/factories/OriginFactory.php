@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\DeityPantheon;
+use App\Models\Origin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class DeityPantheonFactory extends Factory
+class OriginFactory extends Factory
 {
-    protected $model = DeityPantheon::class;
+    protected $model = Origin::class;
 
     public function definition()
     {
         return [
-            'name' => $this->faker->words(15),
+            'name' => $this->faker->text(20),
         ];
     }
 }

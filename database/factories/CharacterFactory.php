@@ -6,7 +6,7 @@ use App\Models\Alignment;
 use App\Models\Character;
 use App\Models\CharacterClass;
 use App\Models\Deity;
-use App\Models\Background;
+use App\Models\Origin;
 use App\Models\Race;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;

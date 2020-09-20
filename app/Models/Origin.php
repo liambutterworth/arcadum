@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToSelf;
 use App\Models\Region;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,15 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Background extends Model
+class Origin extends Model
 {
-    use HasFactory;
+    use BelongsToSelf, HasFactory;
 
-    protected $guarded = [
-        'id',
-    ];
+    protected $guarded = ['id'];
 
-    public function backgroundable(): MorphTo
+    public function originable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -26,6 +25,11 @@ class Background extends Model
     public function characters(): HasMany
     {
         return $this->hasMany(Character::class);
+    }
+
+    public function feats(): BelongsToMany
+    {
+        return $This->belongsToMany(Feat::class);
     }
 
     public function proficiencies(): BelongsToMany

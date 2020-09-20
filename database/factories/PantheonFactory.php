@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Background;
+use App\Models\Pantheon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BackgroundFactory extends Factory
+class PantheonFactory extends Factory
 {
-    protected $model = Background::class;
+    protected $model = Pantheon::class;
 
     public function definition()
     {
         return [
-            'name' => $this->faker->text(20),
+            'name' => $this->faker->words(15),
         ];
     }
 }

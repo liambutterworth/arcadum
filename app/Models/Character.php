@@ -26,11 +26,6 @@ class Character extends Model
         return $this->belongsTo(Alignment::class);
     }
 
-    public function background(): BelongsTo
-    {
-        return $this->belongsTo(Background::class);
-    }
-
     public function campaigns(): BelongsToMany
     {
         return $this->belongsToMany(Campaign::class)->using(CampaignMember::class);
@@ -51,6 +46,11 @@ class Character extends Model
         return $this->belongsToMany(ClassFeature::class);
     }
 
+    public function home(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'location_id');
+    }
+
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class)->using(OrganizationMember::class);
@@ -58,7 +58,7 @@ class Character extends Model
 
     public function origin(): BelongsTo
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(Origin::class);
     }
 
     public function proficiences(): BelongsToMany

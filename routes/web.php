@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/{any?}/', AppController::class);
+Route::namespace('App\Http\Controllers')->group(function() {
+    Route::get('/{any?}/', 'AppController@app');
+});

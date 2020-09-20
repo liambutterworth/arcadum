@@ -11,9 +11,9 @@ class CreateCharactersTable extends Migration
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
             $table->foreignId('alignment_id')->nullable()->constrained();
-            $table->foreignId('background_id')->nullable()->constrained();
             $table->foreignId('deity_id')->nullable()->constrained();
-            $table->foreignId('origin_id')->nullable()->constrained('locations');
+            $table->foreignId('location_id')->nullable()->constrained();
+            $table->foreignId('origin_id')->nullable()->constrained();
             $table->foreignId('race_id')->nullable()->constrained();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
