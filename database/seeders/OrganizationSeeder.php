@@ -5,11 +5,8 @@ namespace Database\Seeders;
 use App\Models\Organization;
 use App\Models\OrganizationCategory;
 use App\Models\OrganizationType;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class OrganizationSeeder extends Seeder
+class OrganizationSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -57,32 +54,29 @@ class OrganizationSeeder extends Seeder
     public function createTypes(array $types): void
     {
         collect($types)->each(function(string $name) {
-            $slug = Str::of($name)->slug();
             $type = OrganizationType::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.organization-types.$slug", $type);
+            $this->set('organization-types', $name, $type);
         });
     }
 
     public function createCategories(array $categories): void
     {
         collect($categories)->each(function(string $name) {
-            $slug = Str::of($name)->slug();
-            $type = OrganizationCategory::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.organization-categories.$slug", $type);
+            $category = OrganizationCategory::factory()->create([ 'name' => $name ]);
+            $this->set('organization-categories', $name, $category);
         });
     }
 
     public function create(array $organizations): void
     {
         collect($organizations)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
-            $category = Cache::get('seeders.organization-categories.' . $data['category']);
-            $type = Cache::get('seeders.organization-types.' . $data['type']);
+            $type = $this->get('organization-types', $data['type']);
+            $category = $this->get('organization-categories', $data['category']);
             $organization = Organization::factory()->make([ 'name' => $name ]);
             $organization->category()->associate($category);
             $organization->type()->associate($type);
             $organization->save();
-            Cache::put("seeders.organizations.$slug", $organization);
+            $this->set('organizations', $name, $organization);
         });
     }
 }

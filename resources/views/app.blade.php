@@ -11,7 +11,7 @@
 
     <body>
         <main id="app">
-            <app-container />
+            <router-view />
         </main>
 
         <script src="{{ mix('js/app.js') }}"></script>

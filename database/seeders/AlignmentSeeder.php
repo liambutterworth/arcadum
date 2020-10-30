@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Alignment;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class AlignmentSeeder extends Seeder
+class AlignmentSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -27,9 +24,8 @@ class AlignmentSeeder extends Seeder
     public function create(array $names): void
     {
         collect($names)->each(function(string $name) {
-            $slug = Str::of($name)->slug();
             $alignment = Alignment::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.alignments.$slug", $alignment);
+            $this->set('alignments', $name, $alignment);
         });
     }
 }

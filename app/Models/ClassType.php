@@ -2,23 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasClassFeatures;
-use App\Models\Concerns\HasClassLevels;
-use App\Models\Concerns\HasRequiredAbilities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class ClassType extends Model
 {
-    use HasClassFeatures, HasClassLevels, HasFactory, HasRequiredAbilities;
-
-    protected $guarded = [
-        'id',
-    ];
+    use HasFactory;
 
     public function archetypes(): HasMany
     {
@@ -30,13 +22,18 @@ class ClassType extends Model
         return $this->hasManyThrough(Character::class, CharacterClass::class);
     }
 
-    public function proficiencies(): BelongsToMany
+    public function classes(): HasMany
     {
-        return $this->belongsToMany(Proficiency::class);
+        return $this->hasMany(CharacterClass::class);
     }
 
-    public function spells(): BelongsToMany
+    public function features(): BelongsToMany
     {
-        return $this->belongsToMany(Spell::class);
+        return $this->belongsToMany(Feature::class)->withPivot('level');
+    }
+
+    public function stats(): HasMany
+    {
+        return $this->hasmany(ClassStats::class);
     }
 }

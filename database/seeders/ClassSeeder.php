@@ -3,42 +3,37 @@
 namespace Database\Seeders;
 
 use App\Models\ClassArchetype;
-use App\Models\ClassFeature;
-use App\Models\ClassLevel;
+use App\Models\ClassStats;
 use App\Models\ClassType;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
+use App\Models\ClassTypeFeature;
+use App\Models\Feature;
+use Illuminate\Support\Arr;
 
-class ClassSeeder extends Seeder
+class ClassSeeder extends ResourceSeeder
 {
     public function run()
     {
+        $this->createFeatures([
+            'Rage' => [],
+            'Unarmored Defense' => [],
+            'Danger Sense' => [],
+            'Reckless Attack' => [],
+            'Primal Path' => [],
+            'Frenzy' => [],
+        ]);
+
         $this->createTypes([
             'Barbarian' => [
                 'features' => [
-                    'Rage' => [ 'level_requirement' => 1 ],
-                    'Unarmored Defense' => [ 'level_requirement' => 1 ],
+                    1 => ['rage'],
+                    2 => ['reckless-attack'],
                 ],
 
-                'levels' => [
+                'stats' => [
                     [ 'level' => 1, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ],
                     [ 'level' => 2, 'proficiency_bonus' => 2, 'rages' => 2, 'rage_damage' => 2 ],
-                    [ 'level' => 3, 'proficiency_bonus' => 2, 'rages' => 3, 'rage_damage' => 2 ],
                 ],
             ],
-
-            // 'Bard',
-            // 'Cleric',
-            // 'Druid',
-            // 'Fighter',
-            // 'Monk',
-            // 'Paladin',
-            // 'Ranger',
-            // 'Rogue',
-            // 'Sorcerer',
-            // 'Warlock',
-            // 'Wizard',
         ]);
 
         $this->createArchetypes([
@@ -46,51 +41,55 @@ class ClassSeeder extends Seeder
                 'type' => 'barbarian',
 
                 'features' => [
-                    'Frenzy' => [ 'level_requirement' => 3 ],
+                    3 => ['frenzy'],
                 ],
             ],
         ]);
     }
 
+    public function createFeatures(array $features)
+    {
+        collect($features)->each(function(array $data, string $name) {
+            $feature = Feature::factory()->create([ 'name' => $name ]);
+            $this->set('class-features', $name, $feature);
+        });
+    }
+
     public function createTypes(array $types): void
     {
         collect($types)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
             $type = ClassType::factory()->create([ 'name' => $name ]);
-            $this->createFeatures($type, $data['features']);
-            $this->createLevels($type, $data['levels']);
-            Cache::put("seeders.class-types.$slug", $type);
+
+            collect($data['features'])->each(function(array $names, int $level) use($type) {
+                collect($this->getMany('class-features', $names))->each(function(Feature $feature) use($type, $level) {
+                    $type->features()->attach($feature, [ 'level' => $level ]);
+                });
+            });
+
+            $stats = collect($data['stats'])->map(function(array $data) use($type) {
+                return ClassStats::factory()->make($data);
+            });
+
+            $type->stats()->saveMany($stats);
+            $this->set('class-types', $name, $type);
         });
     }
 
     public function createArchetypes(array $archetypes): void
     {
         collect($archetypes)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
-            $type = Cache::get('seeders.class-types.' . $data['type']);
+            $type = $this->get('class-types', $data['type']);
             $archetype = ClassArchetype::factory()->make([ 'name' => $name ]);
             $archetype->type()->associate($type);
             $archetype->save();
-            $this->createFeatures($archetype, $data['features']);
-            Cache::put("seeders.class-archetypes.$slug", $archetype);
-        });
-    }
 
-    public function createFeatures($type, array $features)
-    {
-        collect($features)->each(function(array $data, string $name) use($type) {
-            $slug = Str::of($name)->slug();
-            $feature = ClassFeature::factory()->make($data);
-            $type->features()->save($feature);
-            Cache::put("seeders.class-features.$slug", $feature);
-        });
-    }
+            collect($data['features'])->each(function(array $names, int $level) use($archetype) {
+                collect($this->getMany('class-features', $names))->each(function(Feature $feature) use($archetype, $level) {
+                    $archetype->features()->attach($feature, [ 'level' => $level ]);
+                });
+            });
 
-    public function createLevels($type, array $levels): void
-    {
-        collect($levels)->each(function(array $data) use($type) {
-            $level = ClassLevel::factory()->make($data);
-            $type->levels()->save($level);
+            $this->set('class-archetypes', $name, $type);
         });
     }
 }

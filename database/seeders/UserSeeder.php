@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class UserSeeder extends Seeder
+class UserSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -60,9 +57,8 @@ class UserSeeder extends Seeder
     public function create(array $users)
     {
         collect($users)->each(function(string $name) {
-            $slug = Str::of($name)->slug();
             $user = User::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.users.$slug", $user);
+            $this->set('users', $name, $user);
         });
     }
 }

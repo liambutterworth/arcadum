@@ -10,10 +10,6 @@ class CharacterClass extends Model
 {
     use HasFactory;
 
-    protected $guarded = [
-        'id',
-    ];
-
     public function archetype(): BelongsTo
     {
         return $this->belongsTo(ClassArchetype::class, 'class_archetype_id');

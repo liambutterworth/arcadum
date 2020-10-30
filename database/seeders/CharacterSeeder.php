@@ -3,28 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\Alignment;
-use App\Models\Origin;
 use App\Models\Character;
 use App\Models\CharacterClass;
-use App\Models\CharacterClassArchetype;
-use App\Models\CharacterClassFeature;
-use App\Models\CharacterClassLevel;
-use App\Models\CharacterClassType;
 use App\Models\Deity;
 use App\Models\Location;
+use App\Models\Origin;
 use App\Models\Race;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class CharacterSeeder extends Seeder
+class CharacterSeeder extends ResourceSeeder
 {
     public function run()
     {
         $this->create([
-            'Madd Morc' => [ 'user' => 'russmoney', 'class' => 'barbarian', 'archetype' => 'berserker' ],
-            'Derek Dramf' => [ 'user' => 'scottjund' ],
+            'Madd Morc' => [ 'user' => 'russmoney' ],
+            'Derok Dramf' => [ 'user' => 'scottjund' ],
             'Neve' => [ 'user' => 'naomi' ],
             'Ives' => [ 'user' => 'snake' ],
             'Seren' => [ 'user' => 'summersalt' ],
@@ -67,35 +60,22 @@ class CharacterSeeder extends Seeder
             'Madeline' => [ 'user' => 'bunny-gif' ],
             'Zara' => [ 'user' => 'zentreya' ],
         ]);
+
+        $this->createClasses([
+            [ 'character' => 'madd-morc', 'type' => 'barbarian', 'archetype' => 'berserker', 'level' => 1 ],
+        ]);
     }
 
     public function create(array $users): void
     {
         collect($users)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
             $character = Character::factory()->make([ 'name' => $name ]);
-            $user = Cache::get('seeders.users.' . $data['user']);
-
-            $alignment = Arr::exists($data, 'alignment')
-                ? Cache::get('seeders.alignments.' . $data['alignment'])
-                : Alignment::inRandomOrder()->first();
-
-            $deity = Arr::exists($data, 'deity')
-                ? Cache::get('seeders.deities.' . $data['deity'])
-                : Deity::inRandomOrder()->first();
-
-            $location = Arr::exists($data, 'location')
-                ? Cache::get('seeders.locations.' . $data['location'])
-                : Location::inRandomOrder()->first();
-
-            $origin = Arr::exists($data, 'origin')
-                ? Cache::get('seeders.origins.' . $data['origin'])
-                : Origin::inRandomOrder()->first();
-
-            $race = Arr::exists($data, 'race')
-                ? Cache::get('seeders.races.' . $data['race'])
-                : Race::inRandomOrder()->first();
-
+            $user = $this->get('users', $data['user']);
+            $alignment = Arr::has($data, 'alignment') ? $this->get('alignments', $data['alignment']) : Alignment::inRandomOrder()->first();
+            $deity = Arr::has($data, 'deity') ? $this->get('deities', $data['deity']) : Deity::inRandomOrder()->first();
+            $location = Arr::has($data, 'location') ? $this->get('locations', $data['location']) : Location::inRandomOrder()->first();
+            $origin = Arr::has($data, 'origin') ? $this->get('origins', $data['origin']) : Origin::inRandomOrder()->first();
+            $race = Arr::has($data, 'race') ? $this->get('races', $data['race']) : Race::inRandomOrder()->first();
             $character->alignment()->associate($alignment);
             $character->deity()->associate($deity);
             $character->home()->associate($origin);
@@ -103,22 +83,18 @@ class CharacterSeeder extends Seeder
             $character->race()->associate($race);
             $character->user()->associate($user);
             $character->save();
+            $this->set('characters', $name, $character);
+        });
+    }
 
-            if (Arr::exists($data, 'class')) {
-                $class = CharacterClass::factory()->make();
-                $type = Cache::get('seeders.class-types.' . $data['class']);
-
-                if (Arr::exists($data, 'archetype')) {
-                    $archetype = Cache::get('seeders.class-archetypes.' . $data['archetype']);
-                    $class->archetype()->associate($archetype);
-                }
-
-                $class->character()->associate($character);
-                $class->type()->associate($type);
-                $class->save();
-            }
-
-            Cache::put("seeders.characters.$slug", $character);
+    public function createClasses(array $classes): void
+    {
+        collect($classes)->each(function(array $data) {
+            $class = CharacterClass::factory()->make([ 'level' => $data['level'] ]);
+            $class->character()->associate($this->get('characters', $data['character']));
+            $class->type()->associate($this->get('class-types', $data['type']));
+            if (Arr::has($data, 'type')) $class->archetype()->associate($this->get('class-archetypes', $data['archetype']));
+            $class->save();
         });
     }
 }

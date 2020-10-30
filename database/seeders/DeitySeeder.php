@@ -3,12 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Deity;
-use App\Models\DeityPantheon;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
-class DeitySeeder extends Seeder
+class DeitySeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -50,12 +47,14 @@ class DeitySeeder extends Seeder
     public function create(array $deities): void
     {
         collect($deities)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
-            $pantheon = Cache::get('seeders.pantheons.' . $data['pantheon']);
             $deity = Deity::factory()->make([ 'name' => $name ]);
-            $deity->pantheon()->associate($pantheon);
-            $deity->save();
-            Cache::put("seeders.deities.$slug", $deity);
+
+            if (Arr::exists($data, 'pantheon')) {
+                $pantheon = $this->get('pantheons', $data['pantheon']);
+                $deity->pantheon()->associate($pantheon);
+            }
+
+            $this->set('deities', $name, $deity);
         });
     }
 }

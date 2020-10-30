@@ -4,11 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Proficiency;
 use App\Models\ProficiencyType;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class ProficiencySeeder extends Seeder
+class ProficiencySeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -76,21 +73,19 @@ class ProficiencySeeder extends Seeder
     public function createTypes(array $types): void
     {
         collect($types)->each(function(string $name) {
-            $slug = Str::of($name)->slug();
             $type = ProficiencyType::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.proficiency-types.$slug", $type);
+            $this->set('proficiency-types', $name, $type);
         });
     }
 
     public function create(array $proficiencies): void
     {
         collect($proficiencies)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
-            $type = Cache::get('seeders.proficiency-types.' . $data['type']);
+            $type = $this->get('proficiency-types', $data['type']);
             $proficiency = Proficiency::factory()->make([ 'name' => $name ]);
             $proficiency->type()->associate($type);
             $proficiency->save();
-            Cache::put("seeders.proficiencies.$slug", $proficiency);
+            $this->set('proficiences', $name, $proficiency);
         });
     }
 }

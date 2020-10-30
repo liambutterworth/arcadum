@@ -7,8 +7,9 @@ mix
         resolve: {
             alias: {
                 js: path.resolve('./resources/js'),
-                pages: path.resolve('./resources/js/pages'),
                 components: path.resolve('./resources/js/components'),
+                layouts: path.resolve('./resources/js/layouts'),
+                pages: path.resolve('./resources/js/pages'),
             },
         },
     });

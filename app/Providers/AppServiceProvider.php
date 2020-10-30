@@ -12,16 +12,13 @@ use App\Models\Organization;
 use App\Models\SeriesInstallment;
 use App\Observers\SeriesInstallmentObserver;
 use App\Observers\CampaignSessionObserver;
-use App\Support\Macros\ResponseMacros;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // morph names
         Relation::morphMap([
             'campaign' => Campaign::class,
             'character' => Character::class,
@@ -31,11 +28,7 @@ class AppServiceProvider extends ServiceProvider
             'organization' => Organization::class,
         ]);
 
-        // observers
         CampaignSession::observe(CampaignSessionObserver::class);
         SeriesInstallment::observe(SeriesInstallmentObserver::class);
-
-        // macros
-        Response::mixin(new ResponseMacros());
     }
 }

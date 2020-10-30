@@ -29,7 +29,12 @@ class Origin extends Model
 
     public function feats(): BelongsToMany
     {
-        return $This->belongsToMany(Feat::class);
+        return $this->belongsToMany(Feat::class);
+    }
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
     }
 
     public function proficiencies(): BelongsToMany

@@ -1,21 +1,27 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Axios from 'axios';
-
-Vue.component('app-container', require('components/App/Container').default);
-Vue.use(VueRouter);
+import AdminLayout from 'layouts/Admin/Layout';
+import MainLayout from 'layouts/Main/Layout';
+import routes from 'js/routes';
 
 Vue.prototype.$api = Axios.create({
-    baseUrl: 'http://localhost:8080/api',
+    baseURL: 'http://localhost:8080/api/',
 
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
     },
 });
 
+Vue.component('admin-layout', AdminLayout);
+Vue.component('main-layout', MainLayout);
+// Vue.component('app-container', AppContainer);
+Vue.use(VueRouter);
+
 export const router = new VueRouter({
     mode: 'history',
-    routes: require('js/routes').default,
+    routes: routes,
 });
 
 export const app = new Vue({

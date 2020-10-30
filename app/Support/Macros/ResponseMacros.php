@@ -3,7 +3,8 @@
 namespace App\Support\Macros;
 
 use Closure;
-use Illuminate\Http\Response;
+// use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class ResponseMacros
 {
@@ -16,11 +17,11 @@ class ResponseMacros
                     break;
 
                 case 'POST':
-                    return $this->successfulPost();
+                    return $this->successfulPost($data);
                     break;
 
                 case 'PUT':
-                    return $this->successfulPut();
+                    return $this->successfulPut($data);
                     break;
 
                 case 'DELETE':
@@ -32,62 +33,48 @@ class ResponseMacros
 
     public function successfulGet(): Closure
     {
-        return function($data) {
-            if (is_null($data)) {
-                return $this->notFound();
-            }
-
-            return $this->json([
-                'success' => true,
-                'data' => $data,
-            ], Response::HTTP_OK);
+        return function($data = null) {
+            if (is_null($data)) return $this->notFound();
+            // return $this->make($data, Response::HTTP_OK);
+            return new JsonResponse($data, JsonResponse::HTTP_OK);
+            // return $this->json($data, Response::HTTP_OK);
         };
     }
 
     public function successfulPost(): Closure
     {
-        return function() {
-            return $this->json([
-                'success' => true,
-            ], Response::HTTP_CREATED);
+        return function($data = null) {
+            $code = is_null($data) ? Response::HTTP_NO_CONTENT : Response::HTTP_OK;
+            return $this->json($data, $code);
         };
     }
 
     public function successfulPut(): Closure
     {
-        return function() {
-            return $this->json([
-                'success' => true,
-            ], Response::HTTP_NO_CONTENT);
+        return function($data = null) {
+            $code = is_null($data) ? Response::HTTP_NO_CONTENT : Response::HTTP_OK;
+            return $this->json($data, $code);
         };
     }
 
     public function successfulDelete(): Closure
     {
         return function() {
-            return $this->json([
-                'success' => true,
-            ], Response::HTTP_NO_CONTENT);
+            return $this->json(null, Response::HTTP_NO_CONTENT);
         };
     }
 
     public function error(): Closure
     {
-        return function(string $message) {
-            return $this->json([
-                'success' => false,
-                'error' => $message,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return function(string $message, ?int $code = null) {
+            return $this->json($message, $code ?: Response::HTTP_INTERNAL_SERVER_ERROR);
         };
     }
 
     public function notFound(): Closure
     {
         return function() {
-            return $this->json([
-                'success' => false,
-                'error' => 'Resource Not Found'
-            ], Response::HTTP_NOT_FOUND);
+            return $this->error('Resource not found', Response::HTTP_NOT_FOUND);
         };
     }
 }

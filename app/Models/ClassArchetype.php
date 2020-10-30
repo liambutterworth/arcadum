@@ -2,23 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasClassFeatures;
-use App\Models\Concerns\HasClassLevels;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ClassArchetype extends Model
 {
-    use HasClassFeatures, HasClassLevels, HasFactory;
+    use HasFactory;
 
-    protected $guarded = [
-        'id',
-    ];
+    protected $guarded = ['id'];
 
-    public function characters(): HasManyThrough
+    public function features(): BelongsToMany
     {
-        return $this->hasManyThrough(Character::class, CharacterClass::class);
+        return $this->belongsToMany(Feature::class)->withPivot('level');
     }
 
     public function type(): BelongsTo

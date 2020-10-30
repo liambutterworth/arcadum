@@ -11,6 +11,7 @@ class CreateOriginsTable extends Migration
         Schema::create('origins', function (Blueprint $table) {
             $table->id();
             $table->foreignId('parent_id')->nullable()->constrained('origins');
+            $table->foreignId('location_id')->nullable()->constrained();
             $table->string('name');
             $table->timestamps();
         });

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Location extends Model
@@ -25,9 +26,9 @@ class Location extends Model
         return $this->belongsTo(Location::class, 'capital_id');
     }
 
-    public function origins(): BelongsToMany
+    public function origins(): HasMany
     {
-        return $this->belongsToMany(Origin::class);
+        return $this->hasMany(Origin::class);
     }
 
     public function ruler(): MorphTo

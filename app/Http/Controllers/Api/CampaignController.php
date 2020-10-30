@@ -14,13 +14,13 @@ class CampaignController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        return response()->success(Campaign::find($id));
+        return response()->success(Campaign::with('sessions')->find($id));
     }
 
     public function store(): JsonResponse
     {
-        Campaign::create(request()->all());
-        return response()->success();
+        $campaign = Campaign::create(request()->all());
+        return response()->success($campaign);
     }
 
     public function update(int $id): JsonResponse
@@ -33,7 +33,7 @@ class CampaignController extends Controller
         }
 
         $campaign->save($request->except('sessions'));
-        return response()->success();
+        return response()->success($campaign);
     }
 
     public function destroy(int $id): JsonResponse

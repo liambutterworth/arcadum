@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Pantheon;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class PantheonSeeder extends Seeder
+class PantheonSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -24,9 +21,8 @@ class PantheonSeeder extends Seeder
     public function create(array $pantheons)
     {
         collect($pantheons)->each(function(string $name) {
-            $slug = Str::of($name)->slug();
             $pantheon = Pantheon::factory()->create([ 'name' => $name ]);
-            Cache::put("seeders.pantheons.$slug", $pantheon);
+            $this->set('pantheons', $name, $pantheon);
         });
     }
 }

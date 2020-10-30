@@ -19,8 +19,8 @@ class ClassFeatureController extends Controller
 
     public function store(): JsonResponse
     {
-        ClassFeature::create(request()->all());
-        return response()->success();
+        // ClassFeature::create(request()->all());
+        // return response()->success();
     }
 
     public function update(int $id): JsonResponse

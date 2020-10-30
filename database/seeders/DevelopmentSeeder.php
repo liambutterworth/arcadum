@@ -14,6 +14,7 @@ class DevelopmentSeeder extends Seeder
             DeitySeeder::class,
             LocationSeeder::class,
             RaceSeeder::class,
+            LanguageSeeder::class,
             FeatSeeder::class,
             ProficiencySeeder::class,
             OrganizationSeeder::class,

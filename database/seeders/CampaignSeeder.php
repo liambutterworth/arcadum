@@ -3,15 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Campaign;
-use App\Models\Character;
-use App\Models\CharacterClass;
-use App\Models\Series;
-use App\Models\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class CampaignSeeder extends Seeder
+class CampaignSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -61,15 +54,14 @@ class CampaignSeeder extends Seeder
     public function create(array $campaigns): void
     {
         collect($campaigns)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
             $campaign = Campaign::factory()->create([ 'name' => $name ]);
 
             collect($data['characters'])->each(function($character) use($campaign) {
-                $character = Cache::get("seeders.characters.$character");
+                $character = $this->get('characters', $character);
                 $campaign->characters()->attach($character);
             });
 
-            Cache::put("seeders.campaigns.$slug", $campaign);
+            $this->set('campaigns', $name, $campaign);
         });
     }
 }

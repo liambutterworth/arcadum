@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Property;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class PropertySeeder extends Seeder
+class PropertySeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -19,12 +16,11 @@ class PropertySeeder extends Seeder
     public function create(array $properties): void
     {
         collect($properties)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
             $property = Property::factory()->make([ 'name' => $name ]);
-            $location = Cache::get('seeders.locations.' . $data['location']);
+            $location = $this->get('locations', $data['location']);
             $property->location()->associate($location);
             $property->save();
-            Cache::put("seeders.properties.$slug", $property);
+            $this->set('properties', $name, $property);
         });
     }
 }

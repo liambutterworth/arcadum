@@ -8,14 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SeriesInstallment extends Pivot
 {
     protected $table = 'series_installments';
-
-    protected $appends = [
-        'number',
-    ];
-
-    protected $guarded = [
-        'id',
-    ];
+    protected $appends = ['number'];
+    protected $guarded = ['id'];
 
     public function campaign(): BelongsTo
     {

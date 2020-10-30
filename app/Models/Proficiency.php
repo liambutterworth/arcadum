@@ -15,11 +15,6 @@ class Proficiency extends Model
         'id',
     ];
 
-    public function backgrounds(): BelongsToMany
-    {
-        return $this->belongsToMany(Background::class);
-    }
-
     public function characters(): BelongsToMany
     {
         return $this->belongsToMany(Character::class);
@@ -33,6 +28,11 @@ class Proficiency extends Model
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class);
+    }
+
+    public function origins(): BelongsToMany
+    {
+        return $this->belongsToMany(Origin::class);
     }
 
     public function type(): BelongsTo

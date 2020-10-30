@@ -12,14 +12,14 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    public function render($request, $error)
-    {
-        if ($error instanceof ModelNotFoundException && $request->expectsJson()) {
-            return response()->notFound();
-        } else if ($request->expectsJson()) {
-            return response()->error($error->getMessage());
-        }
-
-        return parent::render($request, $error);
-    }
+    // public function render($request, $error)
+    // {
+    //     // if ($error instanceof ModelNotFoundException && $request->expectsJson()) {
+    //     //     return response()->notFound();
+    //     // } else if ($request->expectsJson()) {
+    //     //     return response()->error($error->getMessage());
+    //     // }
+    //
+    //     return parent::render($request, $error);
+    // }
 }

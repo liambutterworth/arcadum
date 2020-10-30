@@ -12,9 +12,7 @@ class Race extends Model
 {
     use BelongsToSelf, HasFactory;
 
-    protected $guarded = [
-        'id',
-    ];
+    protected $guarded = ['id'];
 
     public function characters(): HasMany
     {

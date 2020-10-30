@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::namespace('App\Http\Controllers\Api')->group(function() {
     Route::resource('alignments', 'AlignmentController');
-    Route::resource('backgrounds', 'BackgroundController');
     Route::resource('campaigns', 'CampaignController');
     Route::resource('campaigns.sessions', 'CampaignSessionController');
     Route::resource('characters', 'CharacterController');
@@ -13,6 +12,7 @@ Route::namespace('App\Http\Controllers\Api')->group(function() {
     Route::resource('feats', 'FeatController');
     Route::resource('locations', 'LocationController');
     Route::resource('organizations', 'OrganizationController');
+    Route::resource('origins', 'OriginController');
     Route::resource('proficiencies', 'ProficiencyController');
     Route::resource('properties', 'PropertyController');
     Route::resource('races', 'RaceController');
@@ -23,9 +23,10 @@ Route::namespace('App\Http\Controllers\Api')->group(function() {
 
     Route::prefix('class')->group(function() {
         Route::resource('archetypes', 'ClassArchetypeController');
-        Route::resource('features', 'ClassFeatureController');
-        Route::resource('levels', 'ClassLevelController');
+        Route::resource('archetypes.features', 'ClassArchetypeFeatureController');
+        // Route::resource('stats', 'ClassStatsController');
         Route::resource('types', 'ClassTypeController');
+        Route::resource('types.features', 'ClassTypeFeatureController');
     });
 
     Route::prefix('location')->group(function() {

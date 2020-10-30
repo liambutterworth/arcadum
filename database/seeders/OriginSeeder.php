@@ -3,12 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Origin;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class OriginSeeder extends Seeder
+class OriginSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -21,23 +18,19 @@ class OriginSeeder extends Seeder
     public function create(array $origins): void
     {
         collect($origins)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
             $origin = Origin::factory()->create([ 'name' => $name ]);
 
             if (Arr::exists($data, 'proficiencies')) {
-                $proficiencies = collect($data['proficiencies'])->map(function($slug) {
-                    return Cache::get("seeders.proficiencies.$slug");
-                });
-
+                $proficiencies = $this->getMany('proficiencies', $data['proficiencies']);
                 $origin->proficiencies()->saveMany($proficiencies);
             }
 
             if (Arr::exists($data, 'location')) {
-                $location = Cache::get('seeders.locations.' . $data['location']);
+                $location = $this->get('locations', $data['location']);
                 $location->origins()->save($origin);
             }
 
-            Cache::put("seeders.origins.$slug", $origin);
+            $this->set('origins', $name, $origin);
         });
     }
 }

@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Series;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
-class SeriesSeeder extends Seeder
+class SeriesSeeder extends ResourceSeeder
 {
     public function run()
     {
@@ -20,15 +17,10 @@ class SeriesSeeder extends Seeder
     public function create(array $series): void
     {
         collect($series)->each(function(array $data, string $name) {
-            $slug = Str::of($name)->slug();
             $series = Series::factory()->create([ 'name' => $name ]);
-
-            $campaigns = collect($data['campaigns'])->map(function($slug) {
-                return Cache::get("seeders.campaigns.$slug");
-            });
-
+            $campaigns = $this->getMany('campaigns', $data['campaigns']);
             $series->campaigns()->saveMany($campaigns);
-            Cache::put("seeders.series.$slug", $series);
+            $this->set('series', $name, $series);
         });
     }
 }

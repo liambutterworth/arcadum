@@ -2,36 +2,85 @@
 
 namespace App\Http\Controllers\Api;
 
+// use App\Contracts\CharacterRepository;
+// use Illuminate\Http\Request;
+use App\Http\Params\ParamQuery;
+use App\Http\Params\Filters\StringFilter;
 use App\Models\Character;
-use Illuminate\Http\JsonResponse;
 
 class CharacterController extends Controller
 {
-    public function index(): JsonResponse
+    // public function __construct(CharacterRepository $repository)
+    // {
+    //     $this->repository = $repository;
+    // }
+
+    public function index(ParamQuery $query)
     {
-        return response()->success(Character::all());
+        $query->for(Character::class);
+        $query->filter->string('name');
+        return $query->get();
+        // $query->filter->relation('site', 11);
+        // $query->include('classes');
+
+        // $query->filter(StringFilter::class, 'name');
+        // $query->filter(DateFilter::class, 'created_at');
+        // $query->filter(RelationFilter::class, 'classes');
+
+        // $query->filters([
+        //     StringFilter::for('name'),
+        //     DateFilter::for('created_at'),
+        // ]);
+
+        $query->include('classes');
+
+        // $query->filter->string('name');
+        // $query->filter->date('created_at');
+        // $query->filter->relation('race');
+
+        // $query->filter(StringFilter::class, 'name');
+        //
+        // $query->filters([
+        //     'name' => StringFilter::class,
+        // ]);
+        //
+        // $query->filters([
+        //     StringFilter::for('name'),
+        // ]);
+
+        // return Character::paginate();
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $id, ParamQuery $query)
     {
-        return response()->success(Character::find($id));
+        // return Character::with(request('include', []))->find($id);
+        // return IncludeParam::for(Company::class)->find($id);
+        return $query->for(Company::class)->find($id);
     }
 
-    public function store(): JsonResponse
-    {
-        Character::create(request()->all());
-        return response()->success();
-    }
-
-    public function update(int $id): JsonResponse
-    {
-        Character::find($id)->save(request()->all());
-        return response()->success();
-    }
-
-    public function destroy(int $id): JsonResponse
-    {
-        Character::destroy($id);
-        return response()->success();
-    }
+    // public function show(int $id): JsonResponse
+    // {
+    //     $character = $this->repository->find($id);
+    //     return $this->response($character);
+    // }
+    //
+    // public function store(Request $request): JsonResponse
+    // {
+    //     $data = $request->all();
+    //     $character = $this->repository->create($data);
+    //     return $this->response($character);
+    // }
+    //
+    // public function update(int $id, Request $request): JsonResponse
+    // {
+    //     $data = $request->all();
+    //     $character = $this->repository->update($data);
+    //     return $this->response($character);
+    // }
+    //
+    // public function destroy(int $id): JsonResponse
+    // {
+    //     $this->respository->delete($id);
+    //     return $this->response();
+    // }
 }
