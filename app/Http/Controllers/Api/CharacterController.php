@@ -4,22 +4,25 @@ namespace App\Http\Controllers\Api;
 
 // use App\Contracts\CharacterRepository;
 // use Illuminate\Http\Request;
+use App\Http\Requests\CharacterQueryRequest;
 use App\Http\Params\ParamQuery;
 use App\Http\Params\Filters\StringFilter;
 use App\Models\Character;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class CharacterController extends Controller
 {
-    // public function __construct(CharacterRepository $repository)
-    // {
-    //     $this->repository = $repository;
-    // }
-
-    public function index(ParamQuery $query)
+    public function index(CharacterQueryRequest $request)
     {
-        $query->for(Character::class);
-        $query->filter->string('name');
-        return $query->get();
+        dd($request->all());
+        return $request->execute();
+
+        // return $request->query(Character::class);
+
+        // $query->for(Character::class);
+        // $query->filter->string('name');
+        // return $query->get();
+
         // $query->filter->relation('site', 11);
         // $query->include('classes');
 

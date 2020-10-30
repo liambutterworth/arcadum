@@ -2,19 +2,17 @@
 
 namespace App\Http\Params;
 
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Validator;
 
 abstract class Param
 {
-    abstract public function apply($query);
+    const boolean = BooleanParam::class;
+    const date = DateParam::class;
+    const number = NumberParam::class;
+    const relation = RelationParam::class;
+    const string = StringParam::class;
 
-    public function rules()
-    {
-        return [];
-    }
-
-    public function messages()
-    {
-        return [];
-    }
+    abstract static function apply(Builder $query, array $data): void;
+    abstract static function validate(Validator $validator, string $key): void;
 }
